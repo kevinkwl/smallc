@@ -7,6 +7,7 @@
 #include "def.h"
 #include "parser.hh"
 
+static char *padding = "                                                                                ";
 string token_to_string(int tok)
 {
     switch (tok) {
@@ -55,4 +56,11 @@ void dump_token(ostream& os, int lineno, int token, YYSTYPE yylval)
         default:
             os << endl;
     }
+}
+
+char *pad(int n)
+{
+    if (n > 80) return padding;
+    else if (n < 0) return "";
+    return padding + (80-n);
 }
