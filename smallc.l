@@ -4,7 +4,7 @@
 #include <cstdio>
 #define YY_NO_UNPUT
 
-int curline = 0;
+int curr_lineno = 0;
 extern YYSTYPE yylval;
 extern FILE *fin;
 
@@ -50,45 +50,45 @@ ws     [ \t]
 {id}        { save_str(); return(ID);  }
 
     /* Binary Op */
-"."     |
-"+"     |
-"*"     |
-"/"     |
-"%"     |
-"<<"    |
-">>"    |
-">"     |
-">="    |
-"<"     |
-"<="    |
-"=="    |
-"!="    |
-"&"     |
-"^"     |
-"|"     |
-"&&"    |
-"||"    |
-"="     |
-"+="    |
-"-="    |
-"*="    |
-"/="    |
-"&="    |
-"^="    |
-"|="    |
-"<<="   |
-">>="   { save_str(); return(BINARYOP); }
+"."    { save_str(); return(DOT); }
+"+"    { save_str(); return(ADD); }
+"*"    { save_str(); return(MUL); }
+"/"    { save_str(); return(DIV); }
+"%"    { save_str(); return(MOD); }
+"<<"   { save_str(); return(SHL); }
+">>"   { save_str(); return(SHR); }
+">"    { save_str(); return(GT); }
+">="   { save_str(); return(GTE); }
+"<"    { save_str(); return(LT); }
+"<="   { save_str(); return(LTE); }
+"=="   { save_str(); return(EQ); }
+"!="   { save_str(); return(NEQ); }
+"&"    { save_str(); return(B_AND); }
+"^"    { save_str(); return(B_XOR); }
+"|"    { save_str(); return(B_OR); }
+"&&"   { save_str(); return(L_AND); }
+"||"   { save_str(); return(L_OR); }
+"="    { save_str(); return(ASSIGN); }
+"+="   { save_str(); return(ADD_ASSIGN); }
+"-="   { save_str(); return(SUB_ASSIGN); }
+"*="   { save_str(); return(MUL_ASSIGN); }
+"/="   { save_str(); return(DIV_ASSIGN); }
+"&="   { save_str(); return(AND_ASSIGN); }
+"^="   { save_str(); return(XOR_ASSIGN); }
+"|="   { save_str(); return(OR_ASSIGN); }
+"<<="  { save_str(); return(SHL_ASSIGN); }
+">>="   { save_str(); return(SHR_ASSIGN); }
 
     /* Unary Op */
-"!"     |
-"++"    |
-"--"    { save_str(); return(UNARYOP); }
+"!"     { save_str(); return(L_NOT); }
+"++"    { save_str(); return(P_ADD); }
+"--"    { save_str(); return(P_SUB); }
 
     /* Minus(-) need to be processed in parser */
-"-"     { return('-');}
+"-"     { return(SUB);}
 
-\n  ++curline;
+\n  ++curr_lineno;
 {ws}        ;
-.      { std::cerr << "Error token: "<< yytext << " found at line: " << curline << endl; }
+.      { std::cerr << "Error token: "<< yytext << " found at line: " << curr_lineno << endl; }
 
 %%

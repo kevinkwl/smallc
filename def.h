@@ -17,5 +17,5 @@ using std::vector;
 using std::list;
 using std::pair;
 
-char *pad(int);
+string pad(int);
 #endif //SMALLC_DEF_H

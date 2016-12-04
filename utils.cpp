@@ -18,8 +18,6 @@ string token_to_string(int tok)
         case (FOR):        return("FOR");       break;
         case (INT):        return("INT");       break;
         case (TYPE):       return("TYPE");     break;
-        case (BINARYOP):   return("BOP");
-        case (UNARYOP):    return("UOP");
         case '-':          return("MINUS");
         case (COMMA): return("','"); break;
         case (SEMI): return("';'"); break;
@@ -46,10 +44,6 @@ void dump_token(ostream& os, int lineno, int token, YYSTYPE yylval)
         case ID:
             os << *yylval.sval << endl;
             break;
-        case UNARYOP:
-        case BINARYOP:
-            os << *yylval.sval << endl;
-            break;
         case '-':
             os << '-' << endl;
             break;
@@ -58,7 +52,7 @@ void dump_token(ostream& os, int lineno, int token, YYSTYPE yylval)
     }
 }
 
-char *pad(int n)
+string pad(int n)
 {
     if (n > 80) return padding;
     else if (n < 0) return "";

@@ -39,6 +39,12 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+#line 26 "smallc.y" /* yacc.c:1915  */
+
+#include "ast.h"
+
+#line 48 "parser.hh" /* yacc.c:1915  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -48,58 +54,150 @@ extern int yydebug;
     INT = 258,
     ID = 259,
     TYPE = 260,
-    BINARYOP = 261,
-    UNARYOP = 262,
-    SEMI = 263,
-    COMMA = 264,
-    LP = 265,
-    RP = 266,
-    LB = 267,
-    RB = 268,
-    LC = 269,
-    RC = 270,
-    STRUCT = 271,
-    RETURN = 272,
-    IF = 273,
-    ELSE = 274,
-    BREAK = 275,
-    CONT = 276,
-    FOR = 277
+    DOT = 261,
+    SUB = 262,
+    L_NOT = 263,
+    P_ADD = 264,
+    P_SUB = 265,
+    B_NOT = 266,
+    MUL = 267,
+    DIV = 268,
+    MOD = 269,
+    ADD = 270,
+    SHL = 271,
+    SHR = 272,
+    GT = 273,
+    GTE = 274,
+    LT = 275,
+    LTE = 276,
+    EQ = 277,
+    NEQ = 278,
+    B_AND = 279,
+    B_XOR = 280,
+    B_OR = 281,
+    L_AND = 282,
+    L_OR = 283,
+    ASSIGN = 284,
+    ADD_ASSIGN = 285,
+    SUB_ASSIGN = 286,
+    MUL_ASSIGN = 287,
+    DIV_ASSIGN = 288,
+    AND_ASSIGN = 289,
+    XOR_ASSIGN = 290,
+    OR_ASSIGN = 291,
+    SHL_ASSIGN = 292,
+    SHR_ASSIGN = 293,
+    SEMI = 294,
+    COMMA = 295,
+    LP = 296,
+    RP = 297,
+    LB = 298,
+    RB = 299,
+    LC = 300,
+    RC = 301,
+    STRUCT = 302,
+    RETURN = 303,
+    IF = 304,
+    ELSE = 305,
+    BREAK = 306,
+    CONT = 307,
+    FOR = 308,
+    UMINUS = 309,
+    THEN = 310
   };
 #endif
 /* Tokens.  */
 #define INT 258
 #define ID 259
 #define TYPE 260
-#define BINARYOP 261
-#define UNARYOP 262
-#define SEMI 263
-#define COMMA 264
-#define LP 265
-#define RP 266
-#define LB 267
-#define RB 268
-#define LC 269
-#define RC 270
-#define STRUCT 271
-#define RETURN 272
-#define IF 273
-#define ELSE 274
-#define BREAK 275
-#define CONT 276
-#define FOR 277
+#define DOT 261
+#define SUB 262
+#define L_NOT 263
+#define P_ADD 264
+#define P_SUB 265
+#define B_NOT 266
+#define MUL 267
+#define DIV 268
+#define MOD 269
+#define ADD 270
+#define SHL 271
+#define SHR 272
+#define GT 273
+#define GTE 274
+#define LT 275
+#define LTE 276
+#define EQ 277
+#define NEQ 278
+#define B_AND 279
+#define B_XOR 280
+#define B_OR 281
+#define L_AND 282
+#define L_OR 283
+#define ASSIGN 284
+#define ADD_ASSIGN 285
+#define SUB_ASSIGN 286
+#define MUL_ASSIGN 287
+#define DIV_ASSIGN 288
+#define AND_ASSIGN 289
+#define XOR_ASSIGN 290
+#define OR_ASSIGN 291
+#define SHL_ASSIGN 292
+#define SHR_ASSIGN 293
+#define SEMI 294
+#define COMMA 295
+#define LP 296
+#define RP 297
+#define LB 298
+#define RB 299
+#define LC 300
+#define RC 301
+#define STRUCT 302
+#define RETURN 303
+#define IF 304
+#define ELSE 305
+#define BREAK 306
+#define CONT 307
+#define FOR 308
+#define UMINUS 309
+#define THEN 310
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 11 "smallc.y" /* yacc.c:1915  */
+#line 29 "smallc.y" /* yacc.c:1915  */
 
     int ival;
     std::string* sval;
+    Program* program;
+	ExtDefList* extdefs;
+	ExtDef* extdef;
+	ExtVar* extvar;
+	ExtVarList* extvars;
+	SExtVar* sextvar;
+	SExtVarList* sextvars;
+	StSpec* stspec;
+	Paras* paras;
+	StmtBlock* stmtblock;
+	StmtList* stmts;
+	Stmt* stmt;
+	DefList* defs;
+	Def* def;
+	StDef* stdef;
+	StDefList* stdefs;
+	SDec* sdec;
+	SDecList* sdecs;
+	Dec* dec;
+	DecList* decs;
+	Var* var;
+	Init* init;
+	Arrs* arrs;
+	Args* args;
+    Exp* exp;
 
-#line 103 "parser.hh" /* yacc.c:1915  */
+
+#line 201 "parser.hh" /* yacc.c:1915  */
 };
 
 typedef union YYSTYPE YYSTYPE;

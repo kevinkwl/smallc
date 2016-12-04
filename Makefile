@@ -4,7 +4,7 @@ CC=g++
 CXXFLAGS= -g -Wall -std=c++11
 LIB= -ll
 
-SRC= main.cpp smallc.l smallc.y utils.cpp
+SRC= main.cpp utils.cpp ast.cpp
 
 FLEXGEN= lexer.cc
 BISONGEN= parser.cc
@@ -22,7 +22,7 @@ parser.cc: smallc.y
 	${BISON} smallc.y
 
 parser: ${FLEXGEN} ${BISONGEN}
-	${CC} ${CXXFLAGS} ${LIB} ${FLEXGEN} ${BISONGEN} main.cpp -o parser
+	${CC} ${CXXFLAGS} ${LIB} ${FLEXGEN} ${BISONGEN} ${SRC} -o parser
 
 all: ${FLEXGEN} ${BISONGEN}
 

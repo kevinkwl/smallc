@@ -1,8 +1,8 @@
- int f(int a, int b)
+ int func(int a, int b)
  {
      return a + b;
  }
- int g(int a, int b)
+ int gunc(int a, int b)
  {
      return a*b;
  }
@@ -16,9 +16,9 @@
      c ^= 0x10;
      for (int i = 0; i <= 5; ++i) {
          if (i % 2 == 0) {
-             f(i, i+1);
+             func(i, i+1);
          } else {
-             g(i, i+1);
+             gunc(i, i+1);
          }
      }
  }
