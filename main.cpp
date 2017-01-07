@@ -17,7 +17,7 @@ extern Program* ast_root;
 
 int main(int argc, char** argv) {
 
-    fin = fopen("tests/exp.c", "r");
+    fin = fopen("tests/if-then-else.c", "r");
     if (fin == NULL) {
         std::cerr << "Could not open input file " << argv[optind] << std::endl;
         exit(1);
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     do {
         yyparse();
     } while (!feof(fin));
-    ast_root->dump(cout, 4);
+    ast_root->dump(cout, 0);
     fclose(fin);
     exit(0);
 }

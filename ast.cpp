@@ -32,10 +32,10 @@ void VarExtDef::dump(ostream &os, int n) {
 }
 
 
-StExtDef::StExtDef(StSpec *st, SExtVarList *slist)
+StructExtDef::StructExtDef(StructSpec *st, SExtVarList *slist)
 : stspec(st), sextvars(slist){}
 
-void StExtDef::dump(ostream &os, int n) {
+void StructExtDef::dump(ostream &os, int n) {
     stspec->dump(os, n);
     for (SExtVar sv : *sextvars) {
         os << " " << sv;
@@ -55,9 +55,8 @@ void FuncExtDef::dump(ostream &os, int n) {
             os << ", ";
         os << "int " << *iter;
     }
-    os << endl << "{" << endl;
-    stmtBlock->dump(os, n+4);
-    os << "}" << endl;
+    os << ")" << endl;
+    stmtBlock->dump(os, n);
 }
 
 
@@ -77,18 +76,20 @@ void InitExtVar::dump(ostream &os, int n) {
 }
 
 
-StSpec::StSpec(string id) : id(id), sdefs(new StDefList){}
+StructSpec::StructSpec(string id) : id(id), sdefs(new StDefList){}
 
-StSpec::StSpec(string id, StDefList *sl) : id(id), sdefs(sl){}
+StructSpec::StructSpec(string id, StDefList *sl) : id(id), sdefs(sl){}
 
-StSpec::StSpec(StDefList *sl) : id(""), sdefs(sl){}
+StructSpec::StructSpec(StDefList *sl) : id(""), sdefs(sl){}
 
-void StSpec::dump(ostream &os, int n) {
-    os << pad(n) << "struct " << id;
+void StructSpec::dump(ostream &os, int n) {
+    os << pad(n) << "struct " << id ;
     if (!sdefs->empty()) {
-        for (StDef* sd : *sdefs) {
+        os << " {" << endl;
+        for (StructDef* sd : *sdefs) {
             sd->dump(os, n + 4);
         }
+        os << "}";
     }
 }
 
@@ -106,10 +107,11 @@ void StmtBlock::dump(ostream &os, int n) {
     os << pad(n) << "}" << endl;
 }
 
-ExpStmt::ExpStmt(Exp *exp) : exp(exp){}
+ExprStmt::ExprStmt(Expr *exp) : exp(exp){}
 
-void ExpStmt::dump(ostream &os, int n) {
+void ExprStmt::dump(ostream &os, int n) {
     exp->dump(os, n);
+    os << ";" << endl;
 }
 
 BlockStmt::BlockStmt(StmtBlock *sb) : stmtBlock(sb){}
@@ -118,15 +120,15 @@ void BlockStmt::dump(ostream &os, int n) {
     stmtBlock->dump(os, n);
 }
 
-ReturnStmt::ReturnStmt(Exp *exp) : exp(exp){}
+ReturnStmt::ReturnStmt(Expr *exp) : exp(exp){}
 
 void ReturnStmt::dump(ostream &os, int n) {
     os << pad(n) << "return ";
-    exp->dump(os, n);
-    os << endl;
+    exp->dump(os, 0);
+    os << ";" << endl;
 }
 
-IfStmt::IfStmt(Exp *cond, Stmt *ts, Stmt *es)
+IfStmt::IfStmt(Expr *cond, Stmt *ts, Stmt *es)
 : cond(cond), thenStmt(ts), elseStmt(es){}
 
 void IfStmt::dump(ostream &os, int n) {
@@ -140,7 +142,7 @@ void IfStmt::dump(ostream &os, int n) {
     }
 }
 
-ForStmt::ForStmt(Exp *e1, Exp *e2, Exp *e3, Stmt *stmt)
+ForStmt::ForStmt(Expr *e1, Expr *e2, Expr *e3, Stmt *stmt)
 : init(e1), cond(e2), update(e3), stmt(stmt){}
 
 void ForStmt::dump(ostream &os, int n) {
@@ -176,7 +178,7 @@ void VarDef::dump(ostream &os, int n) {
     os << ";\n";
 }
 
-SDef::SDef(StSpec *sts, SDecList *sdl) : stspec(sts), sdecs(sdl){}
+SDef::SDef(StructSpec *sts, SDecList *sdl) : stspec(sts), sdecs(sdl){}
 
 void SDef::dump(ostream &os, int n) {
     stspec->dump(os, n);
@@ -198,15 +200,16 @@ void Dec::dump(ostream &os, int n) {
     }
 }
 
-StDef::StDef(SDecList *sdl) : sdecs(sdl){}
+StructDef::StructDef(SDecList *sdl) : sdecs(sdl){}
 
-void StDef::dump(ostream &os, int n) {
+void StructDef::dump(ostream &os, int n) {
     os << pad(n) << "int ";
     for (auto iter = sdecs->cbegin(); iter != sdecs->cend(); ++iter) {
         if (iter != sdecs->cbegin())
             os << ", ";
         os << *iter;
     }
+    os << ";" << endl;
 }
 
 
@@ -216,16 +219,16 @@ void IdVar::dump(ostream &os, int n) {
     os << pad(n) << id;
 }
 
-ArrayVar::ArrayVar(Var *var, int dim) : var(var), dim(dim){}
+ArrayVar::ArrayVar(Var *var, int index) : var(var), idx(index){}
 
 void ArrayVar::dump(ostream &os, int n) {
     os << pad(n);
     var->dump(os, 0);
-    os << '[' << dim << ']';
+    os << '[' << idx << ']';
 }
 
 
-IntInit::IntInit(Exp *exp) : exp(exp){}
+IntInit::IntInit(Expr *exp) : exp(exp){}
 
 void IntInit::dump(ostream &os, int n) {
     exp->dump(os, n);
@@ -243,10 +246,10 @@ void ArrayInit::dump(ostream &os, int n) {
     os << '}';
 }
 
-BopExp::BopExp(string op, Exp *lexp, Exp *rexp)
+BopExpr::BopExpr(string op, Expr *lexp, Expr *rexp)
 : op(op), lexp(lexp), rexp(rexp) {}
 
-void BopExp::dump(ostream &os, int n) {
+void BopExpr::dump(ostream &os, int n) {
     os << pad(n);
     os << '(';
     lexp->dump(os, 0);
@@ -256,16 +259,16 @@ void BopExp::dump(ostream &os, int n) {
     os << ')';
 }
 
-UopExp::UopExp(string op, Exp *exp) : op(op), exp(exp) {}
+UopExpr::UopExpr(string op, Expr *exp) : op(op), exp(exp) {}
 
-void UopExp::dump(ostream &os, int n) {
+void UopExpr::dump(ostream &os, int n) {
     os << pad(n) << op;
     exp->dump(os, 0);
 }
 
-CallExp::CallExp(string id, Args *args) : id(id), args(args){}
+CallExpr::CallExpr(string id, Args *args) : id(id), args(args){}
 
-void CallExp::dump(ostream &os, int n) {
+void CallExpr::dump(ostream &os, int n) {
     os << pad(n) << id << '(';
     for (auto iter = args->cbegin(); iter != args->cend(); ++iter) {
         if (iter != args->cbegin())
@@ -275,9 +278,9 @@ void CallExp::dump(ostream &os, int n) {
     os << ')';
 }
 
-ArrsExp::ArrsExp(string id, Arrs *arrs) : id(id), arrs(arrs){}
+ArrsExpr::ArrsExpr(string id, Arrs *arrs) : id(id), arrs(arrs){}
 
-void ArrsExp::dump(ostream &os, int n) {
+void ArrsExpr::dump(ostream &os, int n) {
     os << pad(n) << id;
     for (auto iter = arrs->cbegin(); iter != arrs->cend(); ++iter) {
         if (iter != arrs->cbegin())
@@ -289,20 +292,20 @@ void ArrsExp::dump(ostream &os, int n) {
 
 }
 
-AccessExp::AccessExp(string id, string member) : id(id), member(member){}
+AccessExpr::AccessExpr(string id, string member) : id(id), member(member){}
 
-void AccessExp::dump(ostream &os, int n) {
+void AccessExpr::dump(ostream &os, int n) {
     os << pad(n) << id << '.' << member;
 }
 
-IntExp::IntExp(int n) : n(n){}
+IntExpr::IntExpr(int n) : n(n){}
 
-void IntExp::dump(ostream &os, int n) {
+void IntExpr::dump(ostream &os, int n) {
     os << pad(n) << this->n;
 }
 
 
-void NoExp::dump(ostream &os, int n) {
+void NoExpr::dump(ostream &os, int n) {
 }
 
 

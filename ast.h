@@ -29,9 +29,9 @@ class ExtVar;
 typedef std::list<ExtVar*> ExtVarList;
 typedef string SExtVar;
 typedef std::list<SExtVar> SExtVarList;
-class StSpec;
-class StDef;
-typedef std::list<StDef*> StDefList;
+class StructSpec;
+class StructDef;
+typedef std::list<StructDef*> StDefList;
 
 class Stmt;
 class StmtBlock;
@@ -44,14 +44,18 @@ typedef string SDec;
 typedef std::list<SDec> SDecList;
 class Var;
 class Init;
-class Exp;
-typedef std::list<Exp*> Args;
-typedef std::list<Exp*> Arrs;// array access
+class Expr;
+typedef std::list<Expr*> Args;
+typedef std::list<Expr*> Arrs;// array access
 
 // <Type, Id>
 typedef string Para;
 typedef std::list<Para> Paras;
 
+
+/**
+ * PROGRAM -> EXTDEFS
+ */
 class Program : public AstNode {
 protected:
     ExtDefList *extdefs;
@@ -61,10 +65,18 @@ public:
     virtual void dump(ostream &os, int n) override;
 };
 
+/**
+ * EXTDEF -> TYPE EXTVARS SEMI                      ~ VarExtDef
+ *         | STSPEC SEXTVARS SEMI                   ~ StructExtDef
+ *         | TYPE ID LP PARAS RP STMTBLOCK          ~ FuncExtDef
+ */
 class ExtDef : public AstNode {};
+
 
 /**
  * Variable defs;
+ *
+ * EXTDEF -> TYPE EXTVARS SEMI
  */
 class VarExtDef : public ExtDef {
 private:
@@ -75,21 +87,26 @@ public:
     virtual void dump(ostream &os, int n) override;
 };
 
+
 /**
  * Struct defs
+ *
+ * EXTDEF -> STSPEC SEXTVARS SEMI
  */
-class StExtDef : public ExtDef {
+class StructExtDef : public ExtDef {
 private:
-    StSpec *stspec;
+    StructSpec *stspec;
     SExtVarList *sextvars;
 public:
-    StExtDef(StSpec *st, SExtVarList *slist);
+    StructExtDef(StructSpec *st, SExtVarList *slist);
 
     virtual void dump(ostream &os, int n) override;
 };
 
 /**
  * Function defs
+ *
+ * EXTDEF -> TYPE ID LP PARAS RP STMTBLOCK
  */
 class FuncExtDef : public ExtDef {
 private:
@@ -105,6 +122,9 @@ public:
 
 /**
  * ExtVar
+ *
+ * EXTVAR -> VAR                ~ ExtVar
+ *         | VAR ASSIGN INIT    ~ InitExtVar
  */
 class ExtVar : public AstNode {
 protected:
@@ -114,6 +134,10 @@ public:
 
     virtual void dump(ostream &os, int n) override;
 };
+
+/**
+ * EXTVAR -> VAR ASSIGN INIT
+ */
 class InitExtVar : public ExtVar {
 private:
     Init *init;
@@ -124,22 +148,28 @@ public:
 };
 
 /**
- * StSpec
+ * StructSpec
+ *
+ * STSPEC -> STRUCT ID LC SDEFS RC
+ *         | STRUCT LC SDEFS RC
+ *         | STRUCT ID;
  */
-class StSpec : public AstNode {
+class StructSpec : public AstNode {
 private:
     string id;
     StDefList *sdefs;
 public:
-    StSpec(string id);
-    StSpec(string id, StDefList *sl);
-    StSpec(StDefList *sl);
+    StructSpec(string id);
+    StructSpec(string id, StDefList *sl);
+    StructSpec(StDefList *sl);
 
     virtual void dump(ostream &os, int n) override;
 };
 
 /**
  * Statement block
+ *
+ * STMTBLOCK -> LC DEFS STMTS RC
  */
 class StmtBlock : public AstNode {
 private:
@@ -153,13 +183,22 @@ public:
 
 /**
  * Statements
+ *
+ * STMT -> EXP SEMI                                 ~ ExprStmt
+ *       | STMTBLOCK                                ~ StmtBlock
+ *       | RETURN EXP SEMI                          ~ ReturnStmt
+ *       | IF LP EXP RP STMT                        ~ IfStmt
+ *       | IF LP EXP RP STMT ELSE STMT              ~ IfStmt
+ *       | FOR LP EXP SEMI EXP SEMI EXP RP STMT     ~ ForStmt
+ *       | CONT SEMI                                ~ ContStmt
+ *       | BREAK SEMI                               ~ BreakStmt
  */
 class Stmt : public AstNode {};
-class ExpStmt : public Stmt {
+class ExprStmt : public Stmt {
 private:
-    Exp *exp;
+    Expr *exp;
 public:
-    ExpStmt(Exp *exp);
+    ExprStmt(Expr *exp);
 
     virtual void dump(ostream &os, int n) override;
 };
@@ -175,32 +214,32 @@ public:
 
 class ReturnStmt : public Stmt {
 private:
-    Exp *exp;
+    Expr *exp;
 public:
-    ReturnStmt(Exp *exp);
+    ReturnStmt(Expr *exp);
 
     virtual void dump(ostream &os, int n) override;
 };
 
 class IfStmt : public Stmt {
 private:
-    Exp *cond;
+    Expr *cond;
     Stmt *thenStmt;
     Stmt *elseStmt;
 public:
-    IfStmt(Exp *cond, Stmt *ts, Stmt *es = nullptr);
+    IfStmt(Expr *cond, Stmt *ts, Stmt *es = nullptr);
 
     virtual void dump(ostream &os, int n) override;
 };
 
 class ForStmt : public Stmt {
 private:
-    Exp *init;
-    Exp *cond;
-    Exp *update;
+    Expr *init;
+    Expr *cond;
+    Expr *update;
     Stmt *stmt;
 public:
-    ForStmt(Exp *e1, Exp *e2, Exp *e3, Stmt *stmt);
+    ForStmt(Expr *e1, Expr *e2, Expr *e3, Stmt *stmt);
 
     virtual void dump(ostream &os, int n) override;
 };
@@ -216,6 +255,9 @@ public:
 
 /**
  * Def
+ *
+ * DEF  -> TYPE DECS SEMI           ~ VarDef
+ *       | STSPEC SDECS SEMI        ~ SDef
  */
 class Def : public AstNode {};
 class VarDef : public Def {
@@ -229,15 +271,18 @@ public:
 
 class SDef : public Def {
 private:
-    StSpec *stspec;
+    StructSpec *stspec;
     SDecList *sdecs;
 public:
-    SDef(StSpec *sts, SDecList *sdl);
+    SDef(StructSpec *sts, SDecList *sdl);
 
     virtual void dump(ostream &os, int n) override;
 };
 
-
+/**
+ * DEC -> VAR
+ *      | VAR ASSIGN INIT
+ */
 class Dec : public AstNode {
 private:
     Var *var;
@@ -248,17 +293,25 @@ public:
     virtual void dump(ostream &os, int n) override;
 };
 
-class StDef : public AstNode {
+/**
+ * SDEF -> TYPE SDECS SEMI
+ *
+ * only INT is supported as TYPE.
+ */
+class StructDef : public AstNode {
 private:
     SDecList *sdecs;
 public:
-    StDef(SDecList *sdl);
+    StructDef(SDecList *sdl);
 
     virtual void dump(ostream &os, int n) override;
 };
 
 /**
  * Var
+ *
+ * VAR -> ID                ~ IdVar
+ *      | VAR LB INIT RB    ~ ArrayVar
  */
 class Var : public AstNode {};
 class IdVar : public Var {
@@ -272,7 +325,7 @@ public:
 class ArrayVar : public Var {
 private:
     Var *var;
-    int dim;
+    int idx;
 public:
     ArrayVar(Var *var, int dim);
 
@@ -281,13 +334,16 @@ public:
 
 /**
  * Init
+ *
+ * INIT -> EXP              ~ IntInit
+ *       | LC ARGS RC       ~ ArrayInit
  */
 class Init : public AstNode {};
 class IntInit : public Init {
 private:
-    Exp *exp;
+    Expr *exp;
 public:
-    IntInit(Exp *exp);
+    IntInit(Expr *exp);
 
     virtual void dump(ostream &os, int n) override;
 };
@@ -301,64 +357,65 @@ public:
 };
 
 /**
- * Exp
+ * Expr
+ *
  */
-class Exp : public AstNode {};
-class NoExp : public Exp {
+class Expr : public AstNode {};
+class NoExpr : public Expr {
 public:
     virtual void dump(ostream &os, int n) override;
 };
-class BopExp : public Exp {
+class BopExpr : public Expr {
 private:
     string op;
-    Exp *lexp;
-    Exp *rexp;
+    Expr *lexp;
+    Expr *rexp;
 public:
-    BopExp(string op, Exp *lexp, Exp *rexp);
+    BopExpr(string op, Expr *lexp, Expr *rexp);
 
     virtual void dump(ostream &os, int n) override;
 };
-class UopExp : public Exp {
+class UopExpr : public Expr {
 private:
     string op;
-    Exp *exp;
+    Expr *exp;
 public:
-    UopExp(string op, Exp *exp);
+    UopExpr(string op, Expr *exp);
 
     virtual void dump(ostream &os, int n) override;
 };
-class CallExp : public Exp {
+class CallExpr : public Expr {
 private:
     string id;
     Args *args;
 public:
-    CallExp(string id, Args *args);
+    CallExpr(string id, Args *args);
 
     virtual void dump(ostream &os, int n) override;
 };
-class ArrsExp : public Exp {
+class ArrsExpr : public Expr {
 private:
     string id;
     Arrs *arrs;
 public:
-    ArrsExp(string id, Arrs *arrs);
+    ArrsExpr(string id, Arrs *arrs);
 
     virtual void dump(ostream &os, int n) override;
 };
-class AccessExp : public Exp {
+class AccessExpr : public Expr {
 private:
     string id;
     string member;
 public:
-    AccessExp(string id, string member);
+    AccessExpr(string id, string member);
 
     virtual void dump(ostream &os, int n) override;
 };
-class IntExp : public Exp {
+class IntExpr : public Expr {
 private:
     int n;
 public:
-    IntExp(int n);
+    IntExpr(int n);
 
     virtual void dump(ostream &os, int n) override;
 };
