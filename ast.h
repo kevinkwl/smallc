@@ -61,6 +61,7 @@ protected:
     ExtDefList *extdefs;
 public:
     Program(ExtDefList *defs);
+    void semant();
 
     virtual void dump(ostream &os, int n) override;
 };
