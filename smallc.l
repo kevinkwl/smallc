@@ -2,9 +2,10 @@
 #include "def.h"
 #include "parser.hh"
 #include <cstdio>
+#include <stdexcept>
 #define YY_NO_UNPUT
 
-int curr_lineno = 0;
+extern int curr_lineno;
 extern YYSTYPE yylval;
 extern FILE *fin;
 
@@ -13,10 +14,23 @@ extern FILE *fin;
 	if ( (result = fread( (char*)buf, sizeof(char), max_size, fin)) < 0) \
 		YY_FATAL_ERROR( "read() in flex scanner failed");
 
+#define YY_USER_ACTION \
+	yylloc = curr_lineno;
+
 
 void save_num()
 {
-    yylval.ival = stoi(string(yytext), 0, 0); // autodetect base
+    try {
+ 	    yylval.ival = stoi(string(yytext), 0, 0); // autodetect base
+    } catch (std::invalid_argument& e) {
+    	std::cerr << "Error token: "<< yytext << " found at line: " << curr_lineno
+    			  << ": invalid number."<< endl;
+	  	yylval.ival = 0;
+    } catch (std::out_of_range& e) {
+		std::cerr << "Error token: "<< yytext << " found at line: " << curr_lineno
+				  << ": out of range( -2^(31), 2^(31) )."<< endl;
+		yylval.ival = 0;
+    }
 }
 void save_str()
 {

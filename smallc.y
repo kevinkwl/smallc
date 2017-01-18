@@ -3,12 +3,13 @@
 #include "ast.h"
 
 extern int yylex();
+extern int curr_lineno;
 
 
 void yyerror(const char *s);
 
 #define YYLTYPE int   // the type of locations
-#define yylloc curr_lineno  // use the curr_lineno from the lexer
+//#define yyloc curr_lineno  // use the curr_lineno from the lexer
 extern int node_lineno;         // set before constructing a tree node to whatever you want the line number for the tree node to be
 
 
@@ -20,11 +21,15 @@ extern int node_lineno;         // set before constructing a tree node to whatev
 #define SET_NODELOC(Current)  \
 node_lineno = Current;
 
+
+
 Program* ast_root;
 Expr* test;
 %}
 %code requires {
 #include "ast.h"
+
+#define YYLTYPE int
 }
 %union {
     int ival;
@@ -44,7 +49,7 @@ Expr* test;
 	DefList* defs;
 	Def* def;
 	StructDef* stdef;
-	StDefList* stdefs;
+	StructDefList* stdefs;
 	SDec* sdec;
 	SDecList* sdecs;
 	Dec* dec;
@@ -54,7 +59,6 @@ Expr* test;
 	Arrs* arrs;
 	Args* args;
     Expr* exp;
-
 }
 %token <ival> INT
 %token <sval> ID TYPE
@@ -113,7 +117,7 @@ Expr* test;
 
 
 %%
-PROGRAM : EXTDEFS	{ $$ = new Program($1); ast_root = $$; }
+PROGRAM : EXTDEFS	{ @$ = @1; $$ = new Program($1); ast_root = $$; }
 	;
 
 EXTDEFS : EXTDEF EXTDEFS { $2->push_front($1); $$ = $2; }
@@ -129,7 +133,8 @@ SEXTVARS : ID	{ $$ = new SExtVarList{*$1}; }
 	| ID COMMA SEXTVARS { $3->push_front(*$1); $$ = $3; }
 	| %empty    { $$ = new SExtVarList; }
 	;
-EXTVARS : EXTVAR EXTVARS  { $2->push_front($1); $$ = $2; }
+EXTVARS : EXTVAR COMMA EXTVARS  { $3->push_front($1); $$ = $3; }
+	| EXTVAR		{ $$ = new ExtVarList; $$->push_front($1); }
 	| %empty		{ $$ = new ExtVarList; }
 	;
 EXTVAR : VAR		{ $$ = new ExtVar($1); }
@@ -170,7 +175,7 @@ DEFS : DEF DEFS { $2->push_front($1); $$ = $2; }
 	;
 
 SDEFS : SDEF SDEFS	{ $2->push_front($1); $$ = $2; }
-	| %empty	{ $$ = new StDefList; }
+	| %empty	{ $$ = new StructDefList; }
 	;
 
 SDEF : TYPE SDECS SEMI	{ $$ = new StructDef($2); }
@@ -242,15 +247,21 @@ EXPS : LP EXPS RP	{ $$ = $2; }
 	;
 
 ARRS : LB EXP RB ARRS	{ $4->push_front($2); $$ = $4; }
+	| LB EXP RB	{ $$ = new Arrs; $$->push_front($2); }
 	| %empty	{ $$ = new Arrs; }
 
-ARGS : EXP COMMA ARGS	{ $3->push_front($1); $$ = $3; }
+ARGS : EXPS COMMA ARGS	{ $3->push_front($1); $$ = $3; }
+	| EXPS 		{ $$ = new Args; $$->push_front($1);}
 	| %empty	{ $$ = new Args; }
+
 
 %%
 
-void yyerror(const char *s) {
-	cout << "EEK, parse error!  Message: " << s << endl;
-	// might as well halt now:
-	exit(-1);
-}
+    void yyerror(const char *s)
+    {
+      extern int curr_lineno;
+
+      cerr << "line " << curr_lineno << ": " \
+      << s << " at or near " << token_to_string(yychar) << " " << yychar;
+      cerr << endl;
+    }

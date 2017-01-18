@@ -1,17 +1,20 @@
 //
 // Created by Kevin Ling on 18/11/2016.
+// This file contains definitions of abstract syntax tree classes
 //
 
 #ifndef SMALLC_AST_H
 #define SMALLC_AST_H
 
 #include "def.h"
+#include "IRgen.h"
 
 
 
 class AstNode {
 protected:
     int line_number;
+
 public:
     AstNode();
     //virtual AstNode* clone()=0;
@@ -31,7 +34,7 @@ typedef string SExtVar;
 typedef std::list<SExtVar> SExtVarList;
 class StructSpec;
 class StructDef;
-typedef std::list<StructDef*> StDefList;
+typedef std::list<StructDef*> StructDefList;
 
 class Stmt;
 class StmtBlock;
@@ -61,7 +64,8 @@ protected:
     ExtDefList *extdefs;
 public:
     Program(ExtDefList *defs);
-    void semant();
+    void semant(ostream &out);
+    void emit();
 
     virtual void dump(ostream &os, int n) override;
 };
@@ -71,7 +75,11 @@ public:
  *         | STSPEC SEXTVARS SEMI                   ~ StructExtDef
  *         | TYPE ID LP PARAS RP STMTBLOCK          ~ FuncExtDef
  */
-class ExtDef : public AstNode {};
+class ExtDef : public AstNode {
+public:
+    virtual void check() = 0;
+    virtual void emit(IRGenerator *IRg) = 0;
+};
 
 
 /**
@@ -86,6 +94,10 @@ public:
     VarExtDef(ExtVarList *extvars);
 
     virtual void dump(ostream &os, int n) override;
+
+    void check() override;
+
+    void emit(IRGenerator *IRg) override;
 };
 
 
@@ -102,6 +114,9 @@ public:
     StructExtDef(StructSpec *st, SExtVarList *slist);
 
     virtual void dump(ostream &os, int n) override;
+
+    void check() override;
+    void emit(IRGenerator *IRg) override;
 };
 
 /**
@@ -118,6 +133,11 @@ public:
     FuncExtDef(string id, Paras *p, StmtBlock *stmtBlock);
 
     virtual void dump(ostream &os, int n) override;
+
+    void check() override;
+    int getParamCount() const { return params->size(); }
+
+    void emit(IRGenerator *IRg) override;
 };
 
 
@@ -128,24 +148,30 @@ public:
  *         | VAR ASSIGN INIT    ~ InitExtVar
  */
 class ExtVar : public AstNode {
-protected:
-    Var *var;
 public:
+    Var *var;
+
     ExtVar(Var *var);
 
     virtual void dump(ostream &os, int n) override;
+
+    virtual void check();
+
 };
 
 /**
  * EXTVAR -> VAR ASSIGN INIT
  */
 class InitExtVar : public ExtVar {
-private:
-    Init *init;
 public:
+    Init *init;
+    vector<int> *init_value;
+
     InitExtVar(Var *pvar, Init *pinit);
 
     virtual void dump(ostream &os, int n) override;
+
+    void check() override;
 };
 
 /**
@@ -158,13 +184,19 @@ public:
 class StructSpec : public AstNode {
 private:
     string id;
-    StDefList *sdefs;
+    StructDefList *sdefs;
 public:
+    vector<string> fields;
+
     StructSpec(string id);
-    StructSpec(string id, StDefList *sl);
-    StructSpec(StDefList *sl);
+    StructSpec(string id, StructDefList *sl);
+    StructSpec(StructDefList *sl);
 
     virtual void dump(ostream &os, int n) override;
+    StructSpec * check();
+
+    bool hasField(string fld) const;
+    int getOffset(string fld) const;
 };
 
 /**
@@ -180,6 +212,7 @@ public:
     StmtBlock(DefList *dl, StmtList *sl);
 
     virtual void dump(ostream &os, int n) override;
+    void check();
 };
 
 /**
@@ -194,7 +227,10 @@ public:
  *       | CONT SEMI                                ~ ContStmt
  *       | BREAK SEMI                               ~ BreakStmt
  */
-class Stmt : public AstNode {};
+class Stmt : public AstNode {
+public:
+    virtual void check() = 0;
+};
 class ExprStmt : public Stmt {
 private:
     Expr *exp;
@@ -202,6 +238,9 @@ public:
     ExprStmt(Expr *exp);
 
     virtual void dump(ostream &os, int n) override;
+
+    void check() override;
+
 };
 
 class BlockStmt : public Stmt {
@@ -211,6 +250,7 @@ public:
     BlockStmt(StmtBlock *sb);
 
     virtual void dump(ostream &os, int n) override;
+    void check() override;
 };
 
 class ReturnStmt : public Stmt {
@@ -220,6 +260,7 @@ public:
     ReturnStmt(Expr *exp);
 
     virtual void dump(ostream &os, int n) override;
+    void check() override;
 };
 
 class IfStmt : public Stmt {
@@ -231,6 +272,7 @@ public:
     IfStmt(Expr *cond, Stmt *ts, Stmt *es = nullptr);
 
     virtual void dump(ostream &os, int n) override;
+    void check() override;
 };
 
 class ForStmt : public Stmt {
@@ -243,15 +285,18 @@ public:
     ForStmt(Expr *e1, Expr *e2, Expr *e3, Stmt *stmt);
 
     virtual void dump(ostream &os, int n) override;
+    void check() override;
 };
 
 class ContStmt : public Stmt {
 public:
     virtual void dump(ostream &os, int n) override;
+    void check() override;
 };
 class BreakStmt : public Stmt {
 public:
     virtual void dump(ostream &os, int n) override;
+    void check() override;
 };
 
 /**
@@ -260,7 +305,10 @@ public:
  * DEF  -> TYPE DECS SEMI           ~ VarDef
  *       | STSPEC SDECS SEMI        ~ SDef
  */
-class Def : public AstNode {};
+class Def : public AstNode {
+public:
+    virtual void check() = 0;
+};
 class VarDef : public Def {
 private:
     DecList *decs;
@@ -268,6 +316,7 @@ public:
     VarDef(DecList *dl);
 
     virtual void dump(ostream &os, int n) override;
+    void check() override;
 };
 
 class SDef : public Def {
@@ -278,6 +327,7 @@ public:
     SDef(StructSpec *sts, SDecList *sdl);
 
     virtual void dump(ostream &os, int n) override;
+    void check() override;
 };
 
 /**
@@ -292,6 +342,7 @@ public:
     Dec(Var *v, Init *in = nullptr);
 
     virtual void dump(ostream &os, int n) override;
+    void check();
 };
 
 /**
@@ -306,6 +357,14 @@ public:
     StructDef(SDecList *sdl);
 
     virtual void dump(ostream &os, int n) override;
+    void check();
+
+    bool hasName(string id) const {
+        auto it = std::find(sdecs->begin(), sdecs->end(), id);
+        if (it != sdecs->end())
+            return true;
+        return false;
+    }
 };
 
 /**
@@ -314,7 +373,14 @@ public:
  * VAR -> ID                ~ IdVar
  *      | VAR LB INIT RB    ~ ArrayVar
  */
-class Var : public AstNode {};
+class Var : public AstNode {
+public:
+    virtual ExprType::type getType() const = 0;
+    virtual void check(bool enter=true) = 0;
+    virtual int getDim() = 0;
+    virtual string getId() const = 0;
+    virtual int getSize() const = 0;
+};
 class IdVar : public Var {
 private:
     string id;
@@ -322,15 +388,30 @@ public:
     IdVar(string id);
 
     virtual void dump(ostream &os, int n) override;
+
+    ExprType::type getType() const override { return ExprType::INTEGER; }
+    int getDim() override {
+        return 0;
+    }
+    void check(bool enter=true) override;
+    string getId() const override { return id; }
+    int getSize() const override { return 0; }
 };
 class ArrayVar : public Var {
 private:
     Var *var;
-    int idx;
+    int size;
 public:
     ArrayVar(Var *var, int dim);
 
     virtual void dump(ostream &os, int n) override;
+    ExprType::type getType() const override { return ExprType::ARRAY; }
+    int getDim() override {
+        return var->getDim() + 1;
+    }
+    void check(bool enter=true) override;
+    string getId() const override { return var->getId(); }
+    int getSize() const override { return this->size; }
 };
 
 /**
@@ -339,32 +420,65 @@ public:
  * INIT -> EXP              ~ IntInit
  *       | LC ARGS RC       ~ ArrayInit
  */
-class Init : public AstNode {};
-class IntInit : public Init {
-private:
-    Expr *exp;
+class Init : public AstNode {
 public:
+    virtual ExprType::type getType() const = 0;
+    virtual void check() = 0;
+    virtual int getSize() const = 0;
+    virtual bool isConstant() const = 0;
+};
+class IntInit : public Init {
+public:
+    Expr *exp;
     IntInit(Expr *exp);
 
     virtual void dump(ostream &os, int n) override;
+
+    ExprType::type getType() const override {
+        return ExprType::INTEGER;
+    }
+
+    void check() override;
+    int getSize() const override { return 0; }
+    bool isConstant() const override;
+
 };
 class ArrayInit : public Init {
-private:
+public:
     Args *args;
 public:
     ArrayInit(Args *args);
 
     virtual void dump(ostream &os, int n) override;
+
+    ExprType::type getType() const override {
+        return ExprType::ARRAY;
+    }
+
+    void check() override;
+    int getSize() const override { return this->args->size(); }
+
+    bool isConstant() const override;
 };
 
 /**
  * Expr
  *
  */
-class Expr : public AstNode {};
+class Expr : public AstNode {
+public:
+    virtual ExprType::type check() = 0;
+    virtual bool isConstant() const = 0;
+    virtual bool isLval() const { return false; }
+};
 class NoExpr : public Expr {
 public:
     virtual void dump(ostream &os, int n) override;
+    ExprType::type check() override;
+
+    bool isConstant() const override {
+        return true;
+    }
 };
 class BopExpr : public Expr {
 private:
@@ -375,6 +489,11 @@ public:
     BopExpr(string op, Expr *lexp, Expr *rexp);
 
     virtual void dump(ostream &os, int n) override;
+    ExprType::type check() override;
+
+    bool isConstant() const override {
+        return lexp->isConstant() && rexp->isConstant();
+    }
 };
 class UopExpr : public Expr {
 private:
@@ -384,33 +503,67 @@ public:
     UopExpr(string op, Expr *exp);
 
     virtual void dump(ostream &os, int n) override;
+    ExprType::type check() override;
+
+    bool isConstant() const override {
+        return exp->isConstant();
+    }
 };
 class CallExpr : public Expr {
 private:
     string id;
     Args *args;
 public:
+
+    FuncExtDef* func;
     CallExpr(string id, Args *args);
 
     virtual void dump(ostream &os, int n) override;
+    ExprType::type check() override;
+
+    bool isConstant() const override {
+        return false;
+    }
+
+
 };
 class ArrsExpr : public Expr {
 private:
     string id;
     Arrs *arrs;
 public:
+    Var* var;
     ArrsExpr(string id, Arrs *arrs);
 
     virtual void dump(ostream &os, int n) override;
+    ExprType::type check() override;
+
+    bool isConstant() const override {
+        return false;
+    }
+    bool isLval() const override {
+        return true;
+    }
 };
 class AccessExpr : public Expr {
 private:
     string id;
-    string member;
+    string field;
+
 public:
+    StructSpec* spec;
+
     AccessExpr(string id, string member);
 
     virtual void dump(ostream &os, int n) override;
+    ExprType::type check() override;
+
+    bool isConstant() const override {
+        return false;
+    }
+    bool isLval() const override {
+        return true;
+    }
 };
 class IntExpr : public Expr {
 private:
@@ -419,5 +572,10 @@ public:
     IntExpr(int n);
 
     virtual void dump(ostream &os, int n) override;
+    ExprType::type check() override;
+
+    bool isConstant() const override {
+        return true;
+    }
 };
 #endif //SMALLC_AST_H

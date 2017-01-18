@@ -1,11 +1,12 @@
-//
-// Created by Kevin Ling on 18/11/2016.
-//
+/**
+ *
+ * Implementations of ast classes
+ */
 
 #include "ast.h"
 
 int node_lineno = 1;
-AstNode::AstNode() { line_number = node_lineno; }
+AstNode::AstNode() { line_number = node_lineno;}
 
 int AstNode::get_line_number()
 {
@@ -30,6 +31,7 @@ void VarExtDef::dump(ostream &os, int n) {
     }
     os << ";" << endl;
 }
+
 
 
 StructExtDef::StructExtDef(StructSpec *st, SExtVarList *slist)
@@ -67,7 +69,9 @@ void ExtVar::dump(ostream &os, int n) {
 }
 
 InitExtVar::InitExtVar(Var *pvar, Init *pinit)
-: ExtVar(pvar), init(pinit){}
+: ExtVar(pvar), init(pinit) {
+    init_value = new vector<int>();
+}
 
 void InitExtVar::dump(ostream &os, int n) {
     ExtVar::dump(os, n);
@@ -76,11 +80,12 @@ void InitExtVar::dump(ostream &os, int n) {
 }
 
 
-StructSpec::StructSpec(string id) : id(id), sdefs(new StDefList){}
 
-StructSpec::StructSpec(string id, StDefList *sl) : id(id), sdefs(sl){}
+StructSpec::StructSpec(string id) : id(id), sdefs(NULL){}
 
-StructSpec::StructSpec(StDefList *sl) : id(""), sdefs(sl){}
+StructSpec::StructSpec(string id, StructDefList *sl) : id(id), sdefs(sl){}
+
+StructSpec::StructSpec(StructDefList *sl) : id(""), sdefs(sl){}
 
 void StructSpec::dump(ostream &os, int n) {
     os << pad(n) << "struct " << id ;
@@ -91,6 +96,25 @@ void StructSpec::dump(ostream &os, int n) {
         }
         os << "}";
     }
+}
+
+bool StructSpec::hasField(string fld) const {
+    for (StructDef* def: *this->sdefs) {
+        if (def->hasName(fld))
+            return true;
+    }
+    return false;
+}
+
+int StructSpec::getOffset(string fld) const {
+    int offset = 0;
+    if (fields.size() > 0) {
+        auto it = std::find(fields.begin(), fields.end(), fld);
+
+        if (it != fields.end())
+            offset = it - fields.begin();
+    }
+    return offset;
 }
 
 
@@ -219,12 +243,12 @@ void IdVar::dump(ostream &os, int n) {
     os << pad(n) << id;
 }
 
-ArrayVar::ArrayVar(Var *var, int index) : var(var), idx(index){}
+ArrayVar::ArrayVar(Var *var, int index) : var(var), size(index){}
 
 void ArrayVar::dump(ostream &os, int n) {
     os << pad(n);
     var->dump(os, 0);
-    os << '[' << idx << ']';
+    os << '[' << size << ']';
 }
 
 
@@ -232,6 +256,11 @@ IntInit::IntInit(Expr *exp) : exp(exp){}
 
 void IntInit::dump(ostream &os, int n) {
     exp->dump(os, n);
+}
+
+bool IntInit::isConstant() const
+{
+    return this->exp->isConstant();
 }
 
 ArrayInit::ArrayInit(Args *args) : args(args){}
@@ -244,6 +273,15 @@ void ArrayInit::dump(ostream &os, int n) {
         (*iter)->dump(os, 0);
     }
     os << '}';
+}
+
+bool ArrayInit::isConstant() const
+{
+    for (Expr* exp: *this->args) {
+        if (!exp->isConstant())
+            return false;
+    }
+    return true;
 }
 
 BopExpr::BopExpr(string op, Expr *lexp, Expr *rexp)
@@ -292,10 +330,10 @@ void ArrsExpr::dump(ostream &os, int n) {
 
 }
 
-AccessExpr::AccessExpr(string id, string member) : id(id), member(member){}
+AccessExpr::AccessExpr(string id, string member) : id(id), field(member){}
 
 void AccessExpr::dump(ostream &os, int n) {
-    os << pad(n) << id << '.' << member;
+    os << pad(n) << id << '.' << field;
 }
 
 IntExpr::IntExpr(int n) : n(n){}
