@@ -106,7 +106,7 @@ bool StructSpec::hasField(string fld) const {
     return false;
 }
 
-int StructSpec::getOffset(string fld) const {
+unsigned int StructSpec::getOffset(string fld) const {
     int offset = 0;
     if (fields.size() > 0) {
         auto it = std::find(fields.begin(), fields.end(), fld);
@@ -252,7 +252,9 @@ void ArrayVar::dump(ostream &os, int n) {
 }
 
 
-IntInit::IntInit(Expr *exp) : exp(exp){}
+IntInit::IntInit(Expr *exp) : exp(exp){
+    value = new vector<int>();
+}
 
 void IntInit::dump(ostream &os, int n) {
     exp->dump(os, n);
@@ -263,7 +265,14 @@ bool IntInit::isConstant() const
     return this->exp->isConstant();
 }
 
-ArrayInit::ArrayInit(Args *args) : args(args){}
+void IntInit::eval() {
+    int v = this->exp->eval();
+    //cout << "# compute: " << v << endl;
+    value->push_back(v);
+}
+ArrayInit::ArrayInit(Args *args) : args(args){
+    value = new vector<int>();
+}
 
 void ArrayInit::dump(ostream &os, int n) {
     os << pad(n) << '{';
@@ -284,6 +293,14 @@ bool ArrayInit::isConstant() const
     return true;
 }
 
+void ArrayInit::eval() {
+    for (Expr* exp: *this->args) {
+        int v = exp->eval();
+        //cout << "# compute: " << v << endl;
+        value->push_back(v);
+    }
+}
+
 BopExpr::BopExpr(string op, Expr *lexp, Expr *rexp)
 : op(op), lexp(lexp), rexp(rexp) {}
 
@@ -297,11 +314,75 @@ void BopExpr::dump(ostream &os, int n) {
     os << ')';
 }
 
+int BopExpr::eval() {
+    int i1 = lexp->eval();
+    int i2 = rexp->eval();
+    if (op == "+")
+        return i1 + i2;
+    else if (op == "-")
+        return i1 - i2;
+    else if (op == "*")
+        return i1 * i2;
+    else if (op == "/") {
+        if (i2 == 0) {
+            cerr << "zero divisor initializer" << endl;
+            exit(1);
+        }
+        return i1 / i2;
+    }
+    else if (op == "%") {
+        if (i2 == 0) {
+            cerr << "zero divisor (modulo) initializer" << endl;
+            exit(1);
+        }
+        return i1 % i2;
+    }
+    else if (op == "<<")
+        return i1 << i2;
+    else if (op == ">>")
+        return i1 >> i2;
+    else if (op == ">")
+        return i1 > i2;
+    else if (op == ">=")
+        return i1 >= i2;
+    else if (op == "<")
+        return i1 < i2;
+    else if (op == "<=")
+        return i1 <= i2;
+    else if (op == "==")
+        return i1 == i2;
+    else if (op == "!=")
+        return i1 != i2;
+    else if (op == "&")
+        return i1 & i2;
+    else if (op == "^")
+        return i1 ^ i2;
+    else if (op == "|")
+        return i1 | i2;
+    else if (op == "&&")
+        return i1 && i2;
+    else if (op == "||")
+        return i1 || i2;
+    else
+        return i1 + i2;
+}
+
 UopExpr::UopExpr(string op, Expr *exp) : op(op), exp(exp) {}
 
 void UopExpr::dump(ostream &os, int n) {
     os << pad(n) << op;
     exp->dump(os, 0);
+}
+
+int UopExpr::eval() {
+    int i = exp->eval();
+
+    // only "-"
+    if (op == "-")
+        return -i;
+
+    // others are not compile time constant
+    return i;
 }
 
 CallExpr::CallExpr(string id, Args *args) : id(id), args(args){}

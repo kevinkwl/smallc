@@ -30,6 +30,12 @@ void exitScope() {
     StSpecTbl.exitscope();
 }
 
+bool exist(const string s) {
+    return !(IntVarTbl.probe(s) == NULL && StVarTbl.probe(s) == NULL &&
+        StSpecTbl.probe(s) == NULL && funcTbl.probe(s) == NULL);
+
+}
+
 void IdentifierNotDeclaredError(string id, AstNode *node) {
     ++semant_errors;
     err << "line " << node->get_line_number() << " " << RED << "error: " << RESET
@@ -188,6 +194,9 @@ void Program::semant(ostream &out)
     exitScope();
 
     FuncExtDef* MainFunc = funcTbl.lookup("main");
+    if (MainFunc == NULL) {
+
+    }
     if (MainFunc == NULL || MainFunc->getParamCount() != 0) {
         ++semant_errors;
         err << "Program must contain a function int main()!" << endl;
@@ -198,7 +207,8 @@ void Program::semant(ostream &out)
     if (semant_errors > 0) {
         out << err.str();
         out << semant_errors << " errors found." << endl;
-        //TODO: output "ERROR" to output file
+
+        cout << "ERROR";
         exit(1);
     }
 }
@@ -218,7 +228,7 @@ void StructExtDef::check()
 
     if (!this->sextvars->empty()) {
         for (string& s: *this->sextvars) {
-            if (StVarTbl.lookup(s) == NULL) {
+            if (! exist(s)) {
                 StVarTbl.put(s, spec);
             } else {
                 IdentifierRedeclaredError(s, this);
@@ -239,15 +249,15 @@ void FuncExtDef::check()
         // check for duplicate parameters
         if (!this->params->empty()) {
             for (string &s : *this->params) {
-                if (IntVarTbl.lookup(s) == NULL) {
-                    IntVarTbl.put(s, new IdVar(this->id));
+                if (! exist(s)) {
+                    IntVarTbl.put(s, new IdVar(s));
                 } else {
-                    DuplicateParameterError(this->id, this);
+                    DuplicateParameterError(s, this);
                 }
             }
         }
 
-        this->stmtBlock->check();
+        this->stmtBlock->check(true);
 
         exitScope();
     }
@@ -268,20 +278,35 @@ void InitExtVar::check()
     }
 
     this->init->check();
-    if (!this->init->isConstant())
-        InitilizerNotCompileTimeConstantError(this->init);
 
-    if (this->var->getType() != this->init->getType() || this->var->getSize() >= this->init->getSize()) {
+
+    if (this->var->getType() != this->init->getType() || this->var->getSize() < this->init->getSize()) {
         InitilizeError("Incompatible initializer", this);
+        return;
     }
 
     // if the number of initializer is smaller, then pad with 0
-    if (this->var->getSize() >= this->init->getSize()) {
-        int s1 = this->var->getSize();
-        int s2 = this->init->getSize();
-        ArrayInit* arri = dynamic_cast<ArrayInit*>(this->init);
-        for (int i = s1-s2; i > 0; --i) {
-            arri->args->push_back(new IntExpr(0));
+//    if (this->var->getSize() >= this->init->getSize()) {
+//        int s1 = this->var->getSize();
+//        int s2 = this->init->getSize();
+//        ArrayInit* arri = dynamic_cast<ArrayInit*>(this->init);
+//        for (int i = s1-s2; i > 0; --i) {
+//            arri->args->push_back(new IntExpr(0));
+//        }
+//    }
+
+    if (!this->init->isConstant())
+        InitilizerNotCompileTimeConstantError(this->init);
+    else {
+        // calculate the constants
+        this->init->eval();
+        this->init_value = this->init->value;
+        // code below is associate value with int var. array value value will never been accesses
+        // during eval expression
+        IntInit* intinit = dynamic_cast<IntInit*>(this->init);
+        if (intinit != NULL) {
+            (dynamic_cast<IdVar*>(this->var))->value = (*(intinit->value))[0];
+            return;
         }
     }
 }
@@ -298,15 +323,22 @@ StructSpec* StructSpec::check()
         StSpecTbl.put(this->id, this);
 
         enterScope();
-        for (StructDef* structdef : *this->sdefs)
+        for (StructDef* structdef : *this->sdefs) {
             structdef->check();
+
+            fields.insert(fields.end(), structdef->sdecs->begin(), structdef->sdecs->end());
+        }
+
         exitScope();
         return this;
     } else if (this->id == "" && this->sdefs != NULL) {
 
         enterScope();
-        for (StructDef* structdef : *this->sdefs)
+        for (StructDef* structdef : *this->sdefs) {
             structdef->check();
+
+            fields.insert(fields.end(), structdef->sdecs->begin(), structdef->sdecs->end());
+        }
         exitScope();
 
         return this;
@@ -322,9 +354,10 @@ StructSpec* StructSpec::check()
     }
 }
 
-void StmtBlock::check()
+void StmtBlock::check(bool fromFunc)
 {
-    enterScope();
+    if (!fromFunc)
+        enterScope();
 
     // check defs
     for (Def* def : *this->defs)
@@ -333,7 +366,8 @@ void StmtBlock::check()
     // check stmts
     for (Stmt* stmt: *this->stmts)
         stmt->check();
-    exitScope();
+    if (!fromFunc)
+        exitScope();
 }
 
 void ExprStmt::check()
@@ -343,7 +377,7 @@ void ExprStmt::check()
 
 void BlockStmt::check()
 {
-    this->stmtBlock->check();
+    this->stmtBlock->check(false);
 }
 
 void ReturnStmt::check()
@@ -404,7 +438,7 @@ void SDef::check()
     this->stspec = spec;
     if (!this->sdecs->empty()) {
         for (string& s: *this->sdecs) {
-            if (StVarTbl.probe(s) == NULL) {
+            if (! exist(s)) {
                 StVarTbl.put(s, spec);
             } else {
                 IdentifierRedeclaredError(s, this);
@@ -454,7 +488,7 @@ void StructDef::check()
 
 void IdVar::check(bool enter)
 {
-    if (IntVarTbl.probe(this->id) != NULL)
+    if (exist(this->id))
         IdentifierRedeclaredError(this->id, this);
     else {
         if (enter)

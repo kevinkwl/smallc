@@ -18,6 +18,8 @@ void enterScope();
  */
 void exitScope();
 
+bool exist(const string s);
+
 /**
  * put error into log
  * @param id

@@ -97,7 +97,7 @@ public:
 
     void check() override;
 
-    void emit(IRGenerator *IRg) override;
+    void emit(IRGenerator *irg) override;
 };
 
 
@@ -116,7 +116,7 @@ public:
     virtual void dump(ostream &os, int n) override;
 
     void check() override;
-    void emit(IRGenerator *IRg) override;
+    void emit(IRGenerator *irg) override;
 };
 
 /**
@@ -125,7 +125,7 @@ public:
  * EXTDEF -> TYPE ID LP PARAS RP STMTBLOCK
  */
 class FuncExtDef : public ExtDef {
-private:
+public:
     string id;
     Paras *params;
     StmtBlock *stmtBlock;
@@ -137,7 +137,7 @@ public:
     void check() override;
     int getParamCount() const { return params->size(); }
 
-    void emit(IRGenerator *IRg) override;
+    void emit(IRGenerator *irg) override;
 };
 
 
@@ -157,6 +157,8 @@ public:
 
     virtual void check();
 
+    virtual void emit(IRGenerator *irg);
+
 };
 
 /**
@@ -172,6 +174,7 @@ public:
     virtual void dump(ostream &os, int n) override;
 
     void check() override;
+    void emit(IRGenerator *irg) override;
 };
 
 /**
@@ -196,7 +199,8 @@ public:
     StructSpec * check();
 
     bool hasField(string fld) const;
-    int getOffset(string fld) const;
+    unsigned int getOffset(string fld) const;
+    unsigned int numOfEntries() const { return fields.size();}
 };
 
 /**
@@ -212,7 +216,9 @@ public:
     StmtBlock(DefList *dl, StmtList *sl);
 
     virtual void dump(ostream &os, int n) override;
-    void check();
+    void check(bool fromFunc = false);
+
+    Location* emit(IRGenerator *irg);
 };
 
 /**
@@ -230,6 +236,7 @@ public:
 class Stmt : public AstNode {
 public:
     virtual void check() = 0;
+    virtual Location* emit(IRGenerator *irg) = 0;
 };
 class ExprStmt : public Stmt {
 private:
@@ -241,6 +248,7 @@ public:
 
     void check() override;
 
+    Location* emit(IRGenerator *irg) override;
 };
 
 class BlockStmt : public Stmt {
@@ -251,6 +259,8 @@ public:
 
     virtual void dump(ostream &os, int n) override;
     void check() override;
+
+    Location* emit(IRGenerator *irg) override;
 };
 
 class ReturnStmt : public Stmt {
@@ -261,6 +271,8 @@ public:
 
     virtual void dump(ostream &os, int n) override;
     void check() override;
+
+    Location* emit(IRGenerator *irg) override;
 };
 
 class IfStmt : public Stmt {
@@ -273,6 +285,8 @@ public:
 
     virtual void dump(ostream &os, int n) override;
     void check() override;
+
+    Location* emit(IRGenerator *irg) override;
 };
 
 class ForStmt : public Stmt {
@@ -286,17 +300,23 @@ public:
 
     virtual void dump(ostream &os, int n) override;
     void check() override;
+
+    Location* emit(IRGenerator *irg) override;
 };
 
 class ContStmt : public Stmt {
 public:
     virtual void dump(ostream &os, int n) override;
     void check() override;
+
+    Location* emit(IRGenerator *irg) override;
 };
 class BreakStmt : public Stmt {
 public:
     virtual void dump(ostream &os, int n) override;
     void check() override;
+
+    Location* emit(IRGenerator *irg) override;
 };
 
 /**
@@ -308,6 +328,7 @@ public:
 class Def : public AstNode {
 public:
     virtual void check() = 0;
+    virtual void emit(IRGenerator *irg) = 0;
 };
 class VarDef : public Def {
 private:
@@ -317,6 +338,8 @@ public:
 
     virtual void dump(ostream &os, int n) override;
     void check() override;
+
+    void emit(IRGenerator *irg) override;
 };
 
 class SDef : public Def {
@@ -328,6 +351,8 @@ public:
 
     virtual void dump(ostream &os, int n) override;
     void check() override;
+
+    void emit(IRGenerator *irg) override;
 };
 
 /**
@@ -335,7 +360,7 @@ public:
  *      | VAR ASSIGN INIT
  */
 class Dec : public AstNode {
-private:
+public:
     Var *var;
     Init *init;
 public:
@@ -351,7 +376,7 @@ public:
  * only INT is supported as TYPE.
  */
 class StructDef : public AstNode {
-private:
+public:
     SDecList *sdecs;
 public:
     StructDef(SDecList *sdl);
@@ -380,11 +405,14 @@ public:
     virtual int getDim() = 0;
     virtual string getId() const = 0;
     virtual int getSize() const = 0;
+
+    virtual int numOfEntries() const = 0;
 };
 class IdVar : public Var {
 private:
     string id;
 public:
+    int value;
     IdVar(string id);
 
     virtual void dump(ostream &os, int n) override;
@@ -396,6 +424,9 @@ public:
     void check(bool enter=true) override;
     string getId() const override { return id; }
     int getSize() const override { return 0; }
+
+    int numOfEntries() const override { return 1;}
+
 };
 class ArrayVar : public Var {
 private:
@@ -412,6 +443,10 @@ public:
     void check(bool enter=true) override;
     string getId() const override { return var->getId(); }
     int getSize() const override { return this->size; }
+
+    int numOfEntries() const override {
+        return var->numOfEntries() * size;
+    }
 };
 
 /**
@@ -422,10 +457,13 @@ public:
  */
 class Init : public AstNode {
 public:
+    vector<int> *value;
     virtual ExprType::type getType() const = 0;
     virtual void check() = 0;
     virtual int getSize() const = 0;
     virtual bool isConstant() const = 0;
+
+    virtual void eval() = 0;
 };
 class IntInit : public Init {
 public:
@@ -441,6 +479,8 @@ public:
     void check() override;
     int getSize() const override { return 0; }
     bool isConstant() const override;
+
+    virtual void eval() override;
 
 };
 class ArrayInit : public Init {
@@ -459,6 +499,7 @@ public:
     int getSize() const override { return this->args->size(); }
 
     bool isConstant() const override;
+    virtual void eval() override;
 };
 
 /**
@@ -470,6 +511,10 @@ public:
     virtual ExprType::type check() = 0;
     virtual bool isConstant() const = 0;
     virtual bool isLval() const { return false; }
+
+    virtual int eval() = 0;
+
+    virtual Location* emit(IRGenerator *irg) = 0;
 };
 class NoExpr : public Expr {
 public:
@@ -479,6 +524,10 @@ public:
     bool isConstant() const override {
         return true;
     }
+
+    int eval() override { return 0; }
+
+    Location* emit(IRGenerator *irg) override { return NULL; }
 };
 class BopExpr : public Expr {
 private:
@@ -494,6 +543,10 @@ public:
     bool isConstant() const override {
         return lexp->isConstant() && rexp->isConstant();
     }
+
+    int eval() override;
+
+    Location* emit(IRGenerator *irg) override;
 };
 class UopExpr : public Expr {
 private:
@@ -506,8 +559,12 @@ public:
     ExprType::type check() override;
 
     bool isConstant() const override {
-        return exp->isConstant();
+        return op == "-" && exp->isConstant();
     }
+
+    int eval() override;
+
+    Location* emit(IRGenerator *irg) override;
 };
 class CallExpr : public Expr {
 private:
@@ -524,7 +581,10 @@ public:
     bool isConstant() const override {
         return false;
     }
+    // not compile time
+    int eval() override { return 0;}
 
+    Location* emit(IRGenerator *irg) override;
 
 };
 class ArrsExpr : public Expr {
@@ -544,6 +604,16 @@ public:
     bool isLval() const override {
         return true;
     }
+
+    // not compile time if actually an array access
+    int eval() override {
+        if (arrs->empty())
+            return (dynamic_cast<IdVar*>(var))->value;
+        return 0;
+    }
+
+    Location* emit(IRGenerator *irg) override;
+    Location* emitMemoryLocation(IRGenerator *irg);
 };
 class AccessExpr : public Expr {
 private:
@@ -564,6 +634,12 @@ public:
     bool isLval() const override {
         return true;
     }
+
+    // not compile time
+    int eval() override { return 0;}
+
+    Location* emit(IRGenerator *irg) override;
+    Location* emitMemoryLocation(IRGenerator *irg);
 };
 class IntExpr : public Expr {
 private:
@@ -577,5 +653,9 @@ public:
     bool isConstant() const override {
         return true;
     }
+
+    int eval() override { return n;}
+
+    Location* emit(IRGenerator *irg) override;
 };
 #endif //SMALLC_AST_H

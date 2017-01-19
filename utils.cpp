@@ -6,8 +6,12 @@
 
 #include "def.h"
 #include "parser.hh"
+#include <unordered_map>
 
-static char *padding = "                                                                                ";
+static const char *padding = "                                                                                ";
+
+//static std::unordered_map<string, BopType> bopmap;
+//static std::unordered_map<string, UopType> uopmap;
 string token_to_string(int tok)
 {
     switch (tok) {
@@ -17,7 +21,7 @@ string token_to_string(int tok)
         case (IF):         return("IF");         break;
         case (FOR):        return("FOR");       break;
         case (INT):        return("INT");       break;
-        case (TYPE):       return("TYPE");     break;
+        case (TYPE):       return("type");     break;
         case '-':          return("MINUS");
         case (COMMA): return("','"); break;
         case (SEMI): return("';'"); break;
@@ -58,3 +62,35 @@ string pad(int n)
     else if (n < 0) return "";
     return padding + (80-n);
 }
+
+string ExprType::toString(ExprType::type t) {
+    switch (t) {
+        case STRUCT_VAR:
+            return "struct";
+        case INTEGER:
+            return "int";
+        case FUNC:
+            return "function";
+        case ARRAY:
+            return "array";
+        case ERROR:
+            return "error";
+        case BLANK:
+            return "";
+    }
+}
+//void mapinit()
+//{
+//    bopmap["=="]
+//}
+//
+//BopType bop_string2type(const string op)
+//{
+//
+//}
+//UopType uop_string2type(const string op)
+//{
+//
+//}
+
+
