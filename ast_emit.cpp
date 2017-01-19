@@ -151,8 +151,7 @@ Location* IfStmt::emit(IRGenerator *irg)
     }
 
     irg->GenLabel(nextLabel);
-    return NULL;    
-    
+    return NULL;
 }
 
 Location* ForStmt::emit(IRGenerator *irg)
@@ -213,7 +212,7 @@ void VarDef::emit(IRGenerator *irg)
         // initializing
         if (dec->init != nullptr) {
             IntInit *init;
-            if ((init = dynamic_cast<IntInit*>(init)) != NULL) {
+            if ((init = dynamic_cast<IntInit*>(dec->init)) != NULL) {
                 Location *initLoc = init->exp->emit(irg);
                 irg->GenAssign(l, initLoc);
             }
@@ -254,6 +253,7 @@ Location* BopExpr::emit(IRGenerator *irg)
     Location* lres = lexp->emit(irg);
     Location* rres = rexp->emit(irg);
 
+    // normal binary op
     if (op == "+" || op == "-" || op == "*" || op == "/" || op == "%"
             || op == "<<" || op == ">>" || op == ">"  || op == ">="
             || op == "<" || op == "<=" || op == "==" || op == "!="
@@ -271,7 +271,9 @@ Location* BopExpr::emit(IRGenerator *irg)
         Location* llres = irg->GenBinaryOp("!=", zero, lres);
         Location* rrres = irg->GenBinaryOp("!=", zero, rres);
         return irg->GenBinaryOp("|", llres, rrres);
-    } else if (op == "=" || op == "+=" || op == "-=" || op == "*="
+    }
+    // assign
+    else if (op == "=" || op == "+=" || op == "-=" || op == "*="
                 || op == "/=" || op == "&=" || op == "^=" || op == "|="
                 || op == "<<=" || op == ">>=") {
         Location* res = rres;
@@ -331,6 +333,7 @@ Location* UopExpr::emit(IRGenerator *irg)
         return irg->GenBinaryOp("^", l, neg_one);
     } else {
         // should never reach here
+        return NULL;
     }
 }
 Location* CallExpr::emit(IRGenerator *irg)

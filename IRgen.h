@@ -11,10 +11,6 @@
 #include "symtab.h"
 
 
-
-// These codes are used to identify the built-in functions
-typedef enum { ReadInteger, PrintInt, NumBuiltIns } BuiltIn;
-
 class IRGenerator {
 private:
     std::list<Instruction*> *code;
@@ -77,11 +73,6 @@ public:
     Location *GenLoadLabel(const string label);
     Location *GenLoadAddress(Location *ref);
 
-    // Tries to Optimize Intermediate Representation (Turn on with make opt=1)
-    void OptimizeIR();
-//    void Optimize_CSER(List<Instruction*>* bb);
-//    void Optimize_CP(List<Instruction*>* bb);
- //   void Optimize_LA(List<Instruction*>* bb);
 
     // Generates Tac instructions to copy value from one location to another
     void GenAssign(Location *dst, Location *src);
@@ -150,12 +141,6 @@ public:
     void GenEndFunc();
 
 
-    // Emits the final "object code" for the program by
-    // translating the sequence of Tac instructions into their mips
-    // equivalent and printing them out to stdout. If the debug
-    // flag tac is on (-d tac), it will not translate to MIPS,
-    // but instead just print the untranslated Tac. It may be
-    // useful in debugging to first make sure your Tac is correct.
     void DoFinalCodeGen();
 };
 #endif //SMALLC_IRGEN_H

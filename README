@@ -1,0 +1,50 @@
+Smallc Compiler
+======================================================
+
+The directory contain the following files:
+
+ Makefile
+ README
+ def.h						include headers, util def
+ utils.cpp					implementations of utils functions
+ smallc.y					bison file
+ smallc.l					flex file
+ ast.h/cpp				    abstract syntax tree classes
+ symtab.h					symbol table definition
+ semant.h/semant.cpp		utils for semantic analysis, implementations of semant check of ast classes
+ ast_emit.cpp				implementations of emit method for ast classes (IR generation)
+ tac.h/cpp					Three Address Code classes implementation
+ IRgen.h/cpp				IR generator class implementation
+ mips.h/cpp					final code generator(mips) implementation
+
+
+
+Instructions (Ubuntu/Debian)
+------------
+
+	To compile, type:
+
+	% make
+
+	This produces an executable named "scc"
+
+	To compile a smallc file
+
+	% ./scc input.sc output.asm
+
+	output.asm contains generated mips file
+
+	To generate Three address code, add a "-tac" option at the end.
+	% ./scc input.sc output.tac -tac
+
+	Use spim to run asm file
+
+	% /Path/to/spim output.asm
+
+
+
+    Happy New Year!
+
+    Kangwei Ling
+    5140219295
+    kevinling@sjtu.edu.cn

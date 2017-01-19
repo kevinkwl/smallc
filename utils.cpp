@@ -77,6 +77,8 @@ string ExprType::toString(ExprType::type t) {
             return "error";
         case BLANK:
             return "";
+        default:
+            return "";
     }
 }
 //void mapinit()

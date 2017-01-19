@@ -46,12 +46,12 @@ void parseCmdline(int argc, char** argv)
 int main(int argc, char** argv)
 {
     parseCmdline(argc, argv);
-//    fin = fopen("tests/if-then-else.c", "r");
+//    fin = fopen("tests/queen.sc", "r");
     // parse through the input until there is no more:
     do {
         yyparse();
     } while (!feof(fin));
-    //ast_root->dump(cout, 0);
+//    ast_root->dump(cerr, 0);
     ast_root->semant(cerr);
     ast_root->emit();
     fclose(fin);

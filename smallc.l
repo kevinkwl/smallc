@@ -1,3 +1,4 @@
+%option noyywrap
 %{
 #include "def.h"
 #include "parser.hh"
@@ -38,7 +39,7 @@ void save_str()
 }
 %}
 
-integer ([0-9]+|0[xX][0-9a-f]+)
+integer ([0-9]+|0[xX][0-9a-fA-F]+)
 id     [_a-zA-Z][_a-zA-Z0-9]*
 ws     [ \t]
 %%
@@ -99,7 +100,7 @@ ws     [ \t]
 "--"    { save_str(); return(P_SUB); }
 
     /* Minus(-) need to be processed in parser */
-"-"     { return(SUB);}
+"-"     { save_str(); return(SUB);}
 
 \n  ++curr_lineno;
 {ws}        ;

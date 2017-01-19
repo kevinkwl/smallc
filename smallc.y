@@ -239,7 +239,7 @@ EXPS : LP EXPS RP	{ $$ = $2; }
 	| EXPS DIV EXPS	 { $$ = new BopExpr(*$2, $1, $3); }
 	| EXPS MOD EXPS	 { $$ = new BopExpr(*$2, $1, $3); }
 		// unary minus
-	| SUB   EXPS	%prec UMINUS 		{ $$ = new UopExpr(*$1, $2); }
+	| SUB   EXPS	%prec UMINUS 		{ $$ = new UopExpr("-", $2); }
 	| L_NOT EXPS	 { $$ = new UopExpr(*$1, $2); }
 	| P_ADD EXPS	 { $$ = new UopExpr(*$1, $2); }
 	| P_SUB EXPS	 { $$ = new UopExpr(*$1, $2); }
@@ -247,7 +247,7 @@ EXPS : LP EXPS RP	{ $$ = $2; }
 	;
 
 ARRS : LB EXP RB ARRS	{ $4->push_front($2); $$ = $4; }
-	| LB EXP RB	{ $$ = new Arrs; $$->push_front($2); }
+
 	| %empty	{ $$ = new Arrs; }
 
 ARGS : EXPS COMMA ARGS	{ $3->push_front($1); $$ = $3; }
@@ -264,4 +264,6 @@ ARGS : EXPS COMMA ARGS	{ $3->push_front($1); $$ = $3; }
       cerr << "line " << curr_lineno << ": " \
       << s << " at or near " << token_to_string(yychar) << " " << yychar;
       cerr << endl;
+	  cout << "ERROR" << endl;
+      exit(-1);
     }

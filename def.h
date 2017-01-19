@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <cerrno>
+#include <algorithm>
 
 using std::ostringstream;
 using std::cout;

@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,11 +40,13 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 26 "smallc.y" /* yacc.c:1915  */
+#line 29 "smallc.y" /* yacc.c:1909  */
 
 #include "ast.h"
 
-#line 48 "parser.hh" /* yacc.c:1915  */
+#define YYLTYPE int
+
+#line 50 "parser.hh" /* yacc.c:1909  */
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -163,10 +165,10 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
+typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 29 "smallc.y" /* yacc.c:1915  */
+#line 34 "smallc.y" /* yacc.c:1909  */
 
     int ival;
     std::string* sval;
@@ -177,15 +179,15 @@ union YYSTYPE
 	ExtVarList* extvars;
 	SExtVar* sextvar;
 	SExtVarList* sextvars;
-	StSpec* stspec;
+	StructSpec* stspec;
 	Paras* paras;
 	StmtBlock* stmtblock;
 	StmtList* stmts;
 	Stmt* stmt;
 	DefList* defs;
 	Def* def;
-	StDef* stdef;
-	StDefList* stdefs;
+	StructDef* stdef;
+	StructDefList* stdefs;
 	SDec* sdec;
 	SDecList* sdecs;
 	Dec* dec;
@@ -194,20 +196,31 @@ union YYSTYPE
 	Init* init;
 	Arrs* arrs;
 	Args* args;
-    Exp* exp;
+    Expr* exp;
 
-
-#line 201 "parser.hh" /* yacc.c:1915  */
+#line 202 "parser.hh" /* yacc.c:1909  */
 };
-
-typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
+/* Location type.  */
+#if ! defined YYLTYPE && ! defined YYLTYPE_IS_DECLARED
+typedef struct YYLTYPE YYLTYPE;
+struct YYLTYPE
+{
+  int first_line;
+  int first_column;
+  int last_line;
+  int last_column;
+};
+# define YYLTYPE_IS_DECLARED 1
+# define YYLTYPE_IS_TRIVIAL 1
+#endif
+
 
 extern YYSTYPE yylval;
-
+extern YYLTYPE yylloc;
 int yyparse (void);
 
 #endif /* !YY_YY_PARSER_HH_INCLUDED  */

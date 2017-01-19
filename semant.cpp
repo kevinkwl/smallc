@@ -512,6 +512,8 @@ void ArrayVar::check(bool enter)
 void IntInit::check()
 {
     ExprType::type tp = this->exp->check();
+    if (tp != ExprType::INTEGER)
+        InitilizeError("Initilizer not int", exp);
 }
 
 void ArrayInit::check()
