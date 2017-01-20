@@ -1,0 +1,32 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{Location}\PYG{o}{*} \PYG{n}{ArrsExpr}\PYG{o}{::}\PYG{n}{emitMemoryLocation}\PYG{p}{(}\PYG{n}{IRGenerator} \PYG{o}{*}\PYG{n}{irg}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+    \PYG{n}{Location}\PYG{o}{*} \PYG{n}{base} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GetLocation}\PYG{p}{(}\PYG{n}{var}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getId}\PYG{p}{());}
+    \PYG{n}{Location}\PYG{o}{*} \PYG{n}{baseLoc} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenLoadAddress}\PYG{p}{(}\PYG{n}{base}\PYG{p}{);}
+    \PYG{k+kt}{int} \PYG{n}{dim} \PYG{o}{=} \PYG{n}{var}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getDim}\PYG{p}{();}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{dim} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{baseLoc}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{locationRef} \PYG{o}{=} \PYG{n+nb}{true}\PYG{p}{;}
+        \PYG{k}{return} \PYG{n}{baseLoc}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}
+        \PYG{n}{Location}\PYG{o}{*} \PYG{n}{fourL} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenLoadConstant}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{);}
+        \PYG{n}{Location}\PYG{o}{*} \PYG{n}{arg0} \PYG{o}{=} \PYG{n}{arrs}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{front}\PYG{p}{()}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{emit}\PYG{p}{(}\PYG{n}{irg}\PYG{p}{);}
+        \PYG{n}{Location}\PYG{o}{*} \PYG{n}{baseLoc} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenLoadAddress}\PYG{p}{(}\PYG{n}{base}\PYG{p}{);}
+
+        \PYG{k}{if} \PYG{p}{(}\PYG{n}{dim} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+            \PYG{n}{Location}\PYG{o}{*} \PYG{n}{fl} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}+\PYGZdq{}}\PYG{p}{,} \PYG{n}{baseLoc}\PYG{p}{,} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}*\PYGZdq{}}\PYG{p}{,} \PYG{n}{arg0}\PYG{p}{,} \PYG{n}{fourL}\PYG{p}{));}
+            \PYG{n}{fl}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{locationRef} \PYG{o}{=} \PYG{n+nb}{true}\PYG{p}{;}
+            \PYG{k}{return} \PYG{n}{fl}\PYG{p}{;}
+        \PYG{p}{\PYGZcb{}} \PYG{k}{else} \PYG{p}{\PYGZob{}}
+            \PYG{c+c1}{// two dimension}
+            \PYG{k+kt}{int} \PYG{n}{numInRow} \PYG{o}{=} \PYG{n}{var}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getSize}\PYG{p}{();}
+            \PYG{n}{Location}\PYG{o}{*} \PYG{n}{col} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenLoadConstant}\PYG{p}{(}\PYG{n}{numInRow}\PYG{p}{);}
+            \PYG{n}{Location}\PYG{o}{*} \PYG{n}{arg1} \PYG{o}{=} \PYG{n}{arrs}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{back}\PYG{p}{()}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{emit}\PYG{p}{(}\PYG{n}{irg}\PYG{p}{);}
+            \PYG{n}{Location}\PYG{o}{*} \PYG{n}{tmp} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}+\PYGZdq{}}\PYG{p}{,} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}*\PYGZdq{}}\PYG{p}{,} \PYG{n}{arg0}\PYG{p}{,} \PYG{n}{col}\PYG{p}{),} \PYG{n}{arg1}\PYG{p}{);}
+
+            \PYG{n}{Location}\PYG{o}{*} \PYG{n}{fl} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}+\PYGZdq{}}\PYG{p}{,} \PYG{n}{baseLoc}\PYG{p}{,} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}*\PYGZdq{}}\PYG{p}{,} \PYG{n}{tmp}\PYG{p}{,} \PYG{n}{fourL}\PYG{p}{));}
+            \PYG{n}{fl}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{locationRef} \PYG{o}{=} \PYG{n+nb}{true}\PYG{p}{;}
+            \PYG{k}{return} \PYG{n}{fl}\PYG{p}{;}
+        \PYG{p}{\PYGZcb{}}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

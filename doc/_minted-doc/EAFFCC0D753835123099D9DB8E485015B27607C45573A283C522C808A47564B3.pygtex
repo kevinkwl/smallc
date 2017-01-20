@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{AstNode} \PYG{p}{\PYGZob{}}
+\PYG{k}{protected}\PYG{o}{:}
+    \PYG{k+kt}{int} \PYG{n}{line\PYGZus{}number}\PYG{p}{;}
+\PYG{k}{public}\PYG{o}{:}
+    \PYG{n}{AstNode}\PYG{p}{();}
+    \PYG{k}{virtual} \PYG{o}{\PYGZti{}}\PYG{n}{AstNode}\PYG{p}{()} \PYG{p}{\PYGZob{}} \PYG{p}{\PYGZcb{}}
+    \PYG{k}{virtual} \PYG{k+kt}{void} \PYG{n}{dump}\PYG{p}{(}\PYG{n}{ostream}\PYG{o}{\PYGZam{}} \PYG{n}{os}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{n}\PYG{p}{)} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{k+kt}{int} \PYG{n+nf}{get\PYGZus{}line\PYGZus{}number}\PYG{p}{();}
+\PYG{p}{\PYGZcb{};}
+\end{Verbatim}

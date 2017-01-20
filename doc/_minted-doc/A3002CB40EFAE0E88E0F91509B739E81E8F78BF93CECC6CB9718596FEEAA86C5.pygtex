@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZob{}integer\PYGZcb{}       \PYGZob{} save\PYGZus{}num(); return(INT); \PYGZcb{}
+\PYGZob{}id\PYGZcb{}        \PYGZob{} save\PYGZus{}str(); return(ID);  \PYGZcb{}
+\end{Verbatim}

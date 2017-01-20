@@ -1,0 +1,5 @@
+<map id="InitExtVar" name="InitExtVar">
+<area shape="rect" id="node2" href="$class_ext_var.html" title="{ExtVar\n||+ ExtVar()\l+ dump()\l+ check()\l}" alt="" coords="29,303,110,403"/>
+<area shape="rect" id="node3" href="$class_ast_node.html" title="{AstNode\n|# line_number\l|+ AstNode()\l+ ~AstNode()\l+ dump()\l+ get_line_number()\l}" alt="" coords="5,5,146,119"/>
+<area shape="rect" id="node4" href="$class_var.html" title="{Var\n||+ getType()\l}" alt="" coords="85,168,174,241"/>
+</map>

@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{init}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{eval}\PYG{p}{();}
+
+\PYG{c+c1}{// code below is associate value with int var.}
+\PYG{c+c1}{// array value value will never been accesses}
+\PYG{c+c1}{// during eval expression}
+\PYG{n}{IntInit}\PYG{o}{*} \PYG{n}{intinit} \PYG{o}{=} \PYG{k}{dynamic\PYGZus{}cast}\PYG{o}{\PYGZlt{}}\PYG{n}{IntInit}\PYG{o}{*\PYGZgt{}}\PYG{p}{(}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{init}\PYG{p}{);}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{intinit} \PYG{o}{!=} \PYG{n+nb}{NULL}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{p}{(}\PYG{k}{dynamic\PYGZus{}cast}\PYG{o}{\PYGZlt{}}\PYG{n}{IdVar}\PYG{o}{*\PYGZgt{}}\PYG{p}{(}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{var}\PYG{p}{))}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{value} \PYG{o}{=} \PYG{p}{(}\PYG{o}{*}\PYG{p}{(}\PYG{n}{intinit}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{value}\PYG{p}{))[}\PYG{l+m+mi}{0}\PYG{p}{];}
+    \PYG{k}{return}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

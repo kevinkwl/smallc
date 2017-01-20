@@ -1,0 +1,819 @@
+#+title: Project: Smallc Compiler
+#+author: Kangwei Ling 5140219295
+
+* Lexical Analysis
+In this project, I use /flex/ to do lexical analysis, which scans through the
+source code text file and generates token stream.
+With the language specification, it's very easy to write down the lexical rules
+for flex to work on. In addition, the token type can be found in the header file
+generated from /yacc / bison/.
+** Keywords
+The rules for keywords should be put before identifiers, so that keywords will
+not be parsed as identifiers.
+    #+BEGIN_SRC text
+"int"         return(TYPE);
+";"         return(SEMI);
+","         return(COMMA);
+"("         return(LP);
+")"         return(RP);
+"["         return(LB);
+"]"         return(RB);
+"{"         return(LC);
+"}"         return(RC);
+"struct"      return(STRUCT);
+"return"      return(RETURN);
+"if"          return(IF);
+"else"        return(ELSE);
+"break"       return(BREAK);
+"continue"    return(CONT);
+"for"         return(FOR);
+    #+END_SRC
+** Identifiers and Integers
+An identifier is a character string consisting of alphabetic characters, digits
+and the underscore. Digits can't be the first character. Use the notation of
+lex, it can be write down as,
+    #+BEGIN_SRC text
+id    [_a-zA-Z][_a-zA-Z0-9]*
+    #+END_SRC
+For numbers, to support 3 format (decimal, octal, hexadecimal), the following
+notation is used,
+    #+BEGIN_SRC text
+integer ([0-9]+|0[xX][0-9a-f]+)
+    #+END_SRC
+Thus the rules for identifiers and integers can be written as,
+    #+BEGIN_SRC text
+{integer}       { save_num(); return(INT); }
+{id}        { save_str(); return(ID);  }
+    #+END_SRC
+The two =save_= function is defined to save the =yytext= as token value. As for
+integers, a transformation from string to int is done with the limit checked
+(-2^{31}, 2^{31}).
+    #+BEGIN_SRC c
+void save_num()
+{
+    try {
+ 	    yylval.ival = stoi(string(yytext), 0, 0); // autodetect base
+    } catch (std::invalid_argument& e) {
+    	std::cerr << "Error token: "<< yytext << " found at line: " << curr_lineno
+    			  << ": invalid number."<< endl;
+	  	yylval.ival = 0;
+    } catch (std::out_of_range& e) {
+		std::cerr << "Error token: "<< yytext << " found at line: " << curr_lineno
+				  << ": out of range( -2^(31), 2^(31) )."<< endl;
+		yylval.ival = 0;
+    }
+}
+    #+END_SRC
+** Operators
+There are many valid operators for /smallc/ language. A careful naming approach
+must be adopted. I use a *L* prefix for logical operators and *B* prefix for
+binary operators. A suffix of *ASSIGN* is used to denote /op and assign/
+operators. Below is a small snippet of this part.
+#+BEGIN_SRC text
+"."    { save_str(); return(DOT); }
+"+"    { save_str(); return(ADD); }
+">>"   { save_str(); return(SHR); }
+">"    { save_str(); return(GT); }
+">="   { save_str(); return(GTE); }
+"&"    { save_str(); return(B_AND); }
+"&&"   { save_str(); return(L_AND); }
+"="    { save_str(); return(ASSIGN); }
+"&="   { save_str(); return(AND_ASSIGN); }
+">>="   { save_str(); return(SHR_ASSIGN); }
+"!"     { save_str(); return(L_NOT); }
+"--"    { save_str(); return(P_SUB); }
+#+END_SRC
+It's important to pay attention to binary minus and unary minus, but in lexical
+analysis, there is no way to tell whether it's a binary one or unary one.
+Therefore, this job is delayed to syntax analysis.
+#+BEGIN_SRC text
+    /* Minus(-) need to be processed in parser */
+"-"     { return(SUB);}
+#+END_SRC
+** Line Number
+Line number is very important for developing and debugging, thus it's necessary
+to save the line number when scanning for tokens.
+#+BEGIN_SRC text
+\n  ++curr_lineno;
+#+END_SRC
+Whenever a newline symbol is detected, the variable =curr_lineno= is updated,
+this value is also used when creating abstract syntax tree nodes in syntax analysis.
+* Syntax Analysis
+** Abstract Syntax Tree
+I create a abstract syntax node class for every possible
+production. All classes inherit from =AstNode= class,
+#+BEGIN_SRC cpp
+class AstNode {
+protected:
+    int line_number;
+public:
+    AstNode();
+    virtual ~AstNode() { }
+    virtual void dump(ostream& os, int n) = 0;
+    int get_line_number();
+};
+#+END_SRC
+
+Each node must have a line number for debugging, and a =dump= method to print
+out necessary information of this node. I implemented =dump= method as to print
+out the source code that generate this node, to verify the correctness of the
+parsing process.Below is a simple inherit class diagram.
+
+[[file:img/class.pdf]]
+
+The detail of each class is in the source code.
+** Bison and Grammar
+/Bison/ is the tool used to generate a parser from given grammars. In this
+project, I associate each production with semantic actions so that the abstract
+syntax tree is created during the parsing process.
+
+The types of terminals and non-terminals are declared in yylval union.
+#+BEGIN_SRC c
+%union {
+    int ival;
+    std::string* sval;
+    Program* program;
+	  ExtDefList* extdefs;
+	  ExtDef* extdef;
+	  ExtVar* extvar;
+	  ExtVarList* extvars;
+	  SExtVar* sextvar;
+	  SExtVarList* sextvars;
+	  StructSpec* stspec;
+	  Paras* paras;
+	  StmtBlock* stmtblock;
+	  StmtList* stmts;
+	  Stmt* stmt;
+	  DefList* defs;
+	  Def* def;
+	  StructDef* stdef;
+	  StructDefList* stdefs;
+	  SDec* sdec;
+	  SDecList* sdecs;
+	  Dec* dec;
+	  DecList* decs;
+	  Var* var;
+	  Init* init;
+	  Arrs* arrs;
+	  Args* args;
+    Expr* exp;
+}
+#+END_SRC
+
+All operator terminals have =sval= (pointer to string) value to be stored in
+=BopExpr= node class. For non-terminals, they have corresponding class type.
+
+For simplicity, I made a little tweak to =EXTDEF= production for functions.
+#+BEGIN_SRC text
+EXTDEF -> TYPE EXTVARS SEMI
+        | STSPEC SEXTVARS SEMI
+        | TYPE ID LP PARAS RP STBLOCK     (substitute FUNC in)
+#+END_SRC
+
+For operator precedences, just implement them as the specification says.
+#+BEGIN_SRC text
+%right ASSIGN ADD_ASSIGN SUB_ASSIGN MUL_ASSIGN DIV_ASSIGN AND_ASSIGN XOR_ASSIGN OR_ASSIGN SHL_ASSIGN SHR_ASSIGN
+%left L_OR
+%left L_AND
+%left B_OR
+%left B_XOR
+%left B_AND
+%left EQ NEQ
+%left GT GTE LT LTE
+%left SHL SHR
+%left ADD SUB
+%left MUL DIV MOD
+%right UMINUS L_NOT P_ADD P_SUB B_NOT
+%left DOT LP RP LB RB
+
+%right THEN ELSE
+#+END_SRC
+1. binary minus and unary minus
+   
+   To solve this problem, just set the precedence over the specific production
+   of UMINUS
+   #+BEGIN_SRC text
+   | SUB   EXPS	%prec UMINUS 		{ $$ = new UopExpr(*$1, $2); }
+   #+END_SRC
+
+2. if else
+
+   Note that the =else= should be bond with the last if, using =%right THEN
+   ELSE= associativity and precedence, the rule below solve this problem.
+   #+BEGIN_SRC text
+   | IF LP EXP RP STMT %prec THEN { $$ = new IfStmt($3, $5); }
+	 | IF LP EXP RP STMT ELSE STMT { $$ = new IfStmt($3, $5, $7); }
+   #+END_SRC
+
+* Semantic Analysis
+** Symbol Table
+Symbol Table is a mapping from symbols to their symbol values. In my
+implementation, symbol table is just a wrapper of mapping from string to
+template type, meanwhile support scope actions (enter a scope, exit a scope,
+lookup a symbol, etc).
+
+[[file:img/symtab.png]]
+
+The underlying scope is defined as follows.
+#+BEGIN_SRC cpp
+using Scope = std::unordered_map<string, DAT>;
+using ScopeList = std::list<Scope>;
+#+END_SRC
+
+- lookup :: lookup the symbol in the symbol table, if it's not found in the
+     current scope, search in the previous scope ( next entry of the list). This
+     method is used when we using an identifier in places other than declarations.
+- probe :: only look for the symbol in the current scope. As an identifier can
+     be redeclared in different scope, so we only search in the current scope
+     when do declarations.
+** Semantic Check
+   Four different symbol table is used in my implementation.
+   #+BEGIN_SRC cpp
+   SymbolTable<Var*> IntVarTbl;
+   SymbolTable<StructSpec*> StVarTbl;
+   SymbolTable<StructSpec*> StSpecTbl;
+   SymbolTable<FuncExtDef*> funcTbl;
+   #+END_SRC
+   The =IntVarTbl= is used for integer and integer array variables, =StVarTbl=
+   for struct variables, =funcTbl= for function identifiers. In addition,
+   =StSpecTbl= is a mapping from struct tag to struct specification, for
+   example,
+   #+BEGIN_SRC c
+struct A {
+   int a;
+};
+   #+END_SRC
+   there will be a mapping from *"A"* to this struct specification. Note that, for
+   struct variables (declared ones), their id is also mapping to the corresponding
+   spec.
+
+*** Helper Functions
+    I also introduced some help functions to facilitate the semantic analysis
+    process.
+
+    [[file:img/error.png]]
+
+    =enterscope= and =exitscope= are just wrapper of symbol table's scope
+    functions, they are used to control the scope of multiple tables. The others
+    are just error functions, which normally takes a string and =AstNode= as
+    arguments and handle errors. The =AstNode= is used to get the line number of
+    the error point. All errors will to put into a =stringstream= and update
+    =semant_errors=.
+    #+BEGIN_SRC cpp
+    static ostringstream err;
+    static int semant_errors = 0;
+    #+END_SRC
+    Upon finishing semantic checking, if there are more than one semantic
+    errors, then the program will no proceed to code generation.
+
+*** Checking
+    Semantic check is started by calling =semant= method of the =Program= class,
+    which is the final ast root. Then it will recursively check all extdefs.
+
+    1. dimension of arrays will be no more than 2.
+
+       This can be done by checking the =ArrayVar=. The =Var= part of =ArrayVar=
+       must have dimension less than 2, with normal scalar having dimension of 0.
+       #+BEGIN_SRC cpp
+       if (this->var->getDim() >= 2)
+           ArrayDimensionExceedError(this);
+       #+END_SRC
+
+    2. initializer compatibility.
+       
+       A integer variable can not be initialized with an array (such as {1,1}),
+       vice versa. This is done by checking their dimensions.
+       #+BEGIN_SRC cpp
+       if (this->var->getType() != this->init->getType() || 
+           this->var->getSize() < this->init->getSize()) {
+           InitilizeError("Incompatible initializer", this);
+        }
+       #+END_SRC
+
+    3. variables and functions should be declared before usage.
+
+       variables and functions is only used in expressions. When checking, their
+       identifiers are used to lookup in the symbol table. If not found, an
+       error occurs.
+
+    4. variables and functions should not be re-declared.
+
+       just like the previous one, search with their identifier to check if
+       exists, but only search in current scope (=probe=). If non exists, we are
+       all fine. (All symbol table need to be searched).
+
+    5. Reserved words.
+
+       This is done in lexical part, as reserved words will be firstly parsed as
+       keyword tokens, not identifiers.
+
+    6. Program must contain a function int main() to be the entrance
+
+       Just check the =funcTbl= after checking the extdefs.
+       #+BEGIN_SRC cpp
+    FuncExtDef* MainFunc = funcTbl.lookup("main");
+    if (MainFunc == NULL || MainFunc->getParamCount() != 0) {
+        ++semant_errors;
+        err << "Program must contain a function int main()!" << endl;
+    }       
+       #+END_SRC
+
+    7. The number and type of variable(s) passed should match the definition of
+       the function.
+
+       While checking for =CallExpr=, check if the number of arguments equals to the
+       function's parameter counts, and check if all arguments give a int
+       result.
+       #+BEGIN_SRC cpp
+       int n_args_prov = this->args->size();
+       int n_args_need = func->getParamCount();
+       if (n_args_need != n_args_prov)
+           WrongNumberOfArgument(this);
+        // check arguments
+       for (Expr* exp: *this->args) {
+           ExprType::type tp = exp->check();
+           if (tp != ExprType::INTEGER)
+               ExpNotInt(exp);
+       }
+       #+END_SRC
+
+    8. Use =[]= operator to a non-array variable is not allowed.
+
+       Compare the dimension of variable with the =Arrs= size (number of
+       indices).
+       #+BEGIN_SRC cpp
+        int dim = v->getDim();
+        int ac = this->arrs->size();
+        if (dim != ac) {
+            ArrayDimensionNotMatched(this);       
+       #+END_SRC
+
+    9. The =.= operator can only be used to a struct variable.
+
+       Because I use different symbol table for struct variable and int
+       variable, this is solved.
+
+    10. =break= and =continue= can only be used in a for-loop.
+
+        I keep a global count for loops. Whenever I entered a for-loop,
+        increment that count. Whenever done checking a for-loop, decrement it.
+        If the count is 0 when checking node of =break= or =continue=, there
+        must be an error.
+
+    11. Right-value can not be assigned by any value or expression.
+
+        When check for Binary OP nodes, if the operator is associated with
+        assignment, then check if the left expression is an lvalue. Only array
+        access and struct access are lvalues, so this is not so difficult.
+
+        #+BEGIN_SRC cpp
+    // check if lval
+    if (this->op.find("=") != std::string::npos && this->op != "=="
+            && this->op != ">=" && this->op != "<="
+            && this->op != "!=") {
+        if (!this->lexp->isLval()) {
+            ++semant_errors;
+            err << "line " << this->get_line_number() << " " <<  << "error: "
+                << "not an lvalue" << endl;
+        }
+    }        
+        #+END_SRC
+
+    12. The condition of =if= statement should be an expression with =int= type.
+
+        Every expression has a type, the semantic checking of expression will
+        return its type.
+        #+BEGIN_SRC cpp
+        ExprType::type cond_tp = this->cond->check();
+        if (cond_tp != ExprType::INTEGER)
+            CondTypeError(cond_tp, this);
+        #+END_SRC
+
+    13. The condition of =for= should be an expression with =int= type or
+        \epsilon.
+
+        The =BLANK= type is returned by empty expression.
+        #+BEGIN_SRC cpp
+    ExprType::type cond_tp = this->cond->check();
+    if (cond_tp != ExprType::INTEGER && cond_tp != ExprType::BLANK)
+        CondTypeError(cond_tp, this);        
+        #+END_SRC
+
+    14. Only expression with type =int= can be involved in arithmetic.
+
+        This one can be checked inside =CallExpr= , =ArrsExpr= and =AccessExpr=.
+        As other than those nodes, we only have integers.
+
+    15. global initializer should be compile time constant.
+
+        The initializer of global variables(int and int arrays) can not contain
+        =CallExpr=, =ArrsExpr= or =AccessExpr=.
+        
+        #+BEGIN_SRC cpp
+    if (!this->init->isConstant())
+        InitilizerNotCompileTimeConstantError(this->init);        
+        #+END_SRC
+
+** Annotation
+*** Indirect information replacement
+    When doing semantic checking, I also annotate some ast nodes like struct
+    declarations(with full specification), array access(with var definition),
+    struct access(with full specification)  and function calls( with function definition) so that in the following phases I don't need
+    to look up them in symbol table.
+*** Compile time constant folding
+    The initializer of global variables(int var, int array) should be able to be
+    computed at compile time. And the value is used to generate mips code.
+
+    I introduced an =eval= method for expressions, this method will get the
+    value of a constant expression during semantic analysis.
+
+    The =eval= will only evaluate for binary OP and unary OP and int constant
+    expression. For =ArrsExpr=, if it is an scalar var access(there is no
+    subscript access to array), then return the value of =var= (which I already
+    put it here during indirect information replacement), the default value of
+    =var= is 0.
+
+    The value of an =Init= (either an int init or array init) will be stored in
+    a vector (for int init, there is only one element), the value is computed
+    by a method =eval=,
+
+    #+BEGIN_SRC cpp
+void IntInit::eval() {
+    int v = this->exp->eval();
+    //cout << "# compute: " << v << endl;
+    value->push_back(v);
+}
+
+void ArrayInit::eval() {
+    for (Expr* exp: *this->args) {
+        int v = exp->eval();
+        //cout << "# compute: " << v << endl;
+        value->push_back(v);
+    }
+}    
+    #+END_SRC
+
+    Note that, after compute compile time constant for global variables, the
+    value of a global var should be updated with its init value, so that the
+    future usage of this value during eval is  correct.
+
+    #+BEGIN_SRC cpp
+        this->init->eval();
+
+        // code below is associate value with int var. 
+        // array value value will never been accesses
+        // during eval expression
+        IntInit* intinit = dynamic_cast<IntInit*>(this->init);
+        if (intinit != NULL) {
+            (dynamic_cast<IdVar*>(this->var))->value = (*(intinit->value))[0];
+            return;
+        }    
+    #+END_SRC
+*** Struct Specification flatten
+    Because in the grammar, specification for struct is wrapped in two layers,
+    it will be very useful for calculating offset if the fields are in a flatten
+    list.
+
+    #+BEGIN_SRC text
+    for (StructDef* structdef : *this->sdefs) {
+        structdef->check();
+        fields.insert(fields.end(), 
+               structdef->sdecs->begin(), structdef->sdecs->end());
+    }
+    #+END_SRC
+*** read and write
+    These two function is added into =funcTbl= at the beginning.
+
+    #+BEGIN_SRC cpp
+    Paras* pp = new Paras;
+    pp->push_front("x");
+    FuncExtDef* read = new FuncExtDef("read", pp, nullptr);
+    FuncExtDef* write = new FuncExtDef("write", pp, nullptr);
+    funcTbl.put("read", read);
+    funcTbl.put("write", write);    
+    #+END_SRC
+
+    When checking for function call, =read= call must be called with lvalue
+    argument!
+
+    #+BEGIN_SRC cpp
+    if (this->id == "read" && !exp->isLval()) {
+        ++semant_errors;
+        err << "line " << exp->get_line_number() << " " << "error: "
+        << "not an lvalue" << endl;
+    }    
+    #+END_SRC
+* IR Generation
+  For this project, I use three address code as intermediate representation,
+  this form of IR is very close to the assembly language so that it will be very
+  easy to transform into final assembly code.
+
+  Every TAC class inherit from =Instruction= class.
+  #+BEGIN_SRC cpp
+class Instruction {
+protected:
+    char printed[128];
+public:
+    virtual ~Instruction() {}
+    virtual void Print();
+    virtual void EmitSpecific(Mips *mips) = 0;
+    virtual void Emit(Mips *mips);
+};
+  #+END_SRC
+  The printed array is the string representation of the instruction(for printing
+  three address code out).
+
+  Below is a small IR snippet:
+
+  [[file:img/ir.png]]
+
+** Three Address Code
+   The following three address code classes are used in this project.
+   #+BEGIN_SRC cpp
+class LoadConstant; // load immediate
+class Assign;
+class Load;
+class Store;
+class BinaryOp;
+class Label;
+class Goto;
+class IfZ;
+class BeginFunc;
+class EndFunc;
+class Return;
+class PushParam;
+class RemoveParams;
+class LCall;
+class GlobalData;
+class ReadInt;
+class WriteInt;
+class LoadAddress;   
+   #+END_SRC
+   It's very clear what does each one means, you can tell by its name. The
+   detail of each class is in file =tac.h/.cpp=.
+
+** Location
+    A Location object is used to identify the operands to the various TAC
+    instructions. A Location is either =fp= or =gp= 
+    relative (depending on whether in stack or global segment) 
+    and has an offset relative to the base of that segment.
+    For example, a declaration for integer num as the first local
+    variable in a function would be assigned a Location object
+    with name "num", segment fpRelative, and offset -8.
+    #+BEGIN_SRC cpp
+typedef enum {fpRelative, gpRelative} Segment;
+
+class Location
+{
+protected:
+    const string variableName;
+    Segment segment;
+    int offset;
+
+public:
+    Location(Segment seg, int offset, const string name);
+
+    const string GetName() const     { return variableName; }
+    Segment GetSegment() const      { return segment; }
+    int GetOffset() const           { return offset; }
+
+    bool locationRef;
+
+    bool operator==(const Location& that) const {
+        return this->GetName() == that.GetName() &&
+       this->GetSegment() == that.GetSegment() &&
+       this->GetOffset() == that.GetOffset();
+    }
+};    
+    #+END_SRC
+    Each TAC class is associated with one or more =Location= (i.e. src and dst)
+** IR generator
+   The CodeGenerator class is used to build TAC
+ instructions (using the Tac class and its subclasses) and store the
+ instructions in a sequential list when traversing the abstract syntax tree for
+ IR generation, ready for further processing or translation to MIPS as part of
+ final code generation. 
+
+ This class has two code lists, one for global data, another for code segment.
+#+BEGIN_SRC cpp
+    std::list<Instruction*> *code;
+    std::list<Instruction*> *data;
+#+END_SRC
+ Also, this class holds a symbol table mapping from variable name to their
+ locations (including temp vars). Besides, it provides utility functions to
+ use the stack and global area, as well as generate label and temp vars.
+#+BEGIN_SRC cpp
+    string NewLabel();
+    Location *GenGlobalVar(const string name, unsigned int size, vector<int> *init);
+    Location *GetNewLocationOnStack(const string name);
+    Location *GetNewBulkLocationOnStack(const string name, unsigned int size);
+    Location *GenTempVar();
+#+END_SRC
+ Apart from all these, other methods are used to generate corresponding TAC
+ instruction. The details of the implementation is in file =IRgen.h/cpp=.
+** emit
+   The TAC instruction list is built up upon traversing the abstract syntax
+   tree. The =emit= method of ast classes does this job. The implementation can
+   be found in file =ast_emit.h=.
+*** Global Variables
+   Upon start, it'will firstly generate tac for global variables(int, int array,
+   struct). Actually these three are basically the same because they only use a
+   sequence of 4-bytes memory. With enough information provided in the ast node,
+   use =IRGenerator='s =GenGlobalVar= method is very straightforward.
+*** Function
+    For function defs, firstly a label tac will be generated for that function,
+    locations of its parameters will be set, then its body will be emit.
+    #+BEGIN_SRC cpp
+void FuncExtDef::emit(IRGenerator *irg)
+{
+    irg->NewScope();
+
+    string tmp = "f_" + this->id;
+    irg->GenLabel(tmp);
+
+    if (this->id == "main")
+        irg->GenLabel("main");
+
+    BeginFunc* bf = irg->GenBeginFunc();
+
+    // gen stack space for parameter
+    int onStackParam = 0;
+    for (const string &p : *params) {
+        irg->InsertLocation(p, new Location(fpRelative, 4 + onStackParam * 4, p));
+        ++onStackParam;
+    }
+
+    this->stmtBlock->emit(irg);
+
+    bf->SetFrameSize(irg->currentStackSize * 4);
+    irg->GenEndFunc();
+
+    irg->RemoveScope();
+}
+    #+END_SRC
+
+*** Statement
+    For statement, just follow the definition of the statement and generate
+    correct tac. For loops to work with =break= and =continue=, I kept two
+    global lists of exit labels and for-loop's update label. Thus =break= and
+    =continue= will be jump to the correct label.
+*** Expression
+    The =emit= method for expressions are a little bit difficult, because I was
+    torn between reference(addresses) and values.
+
+    1. Binary Operators
+
+       For normal binary operators(corresponding mips op exists), just generate
+       BinaryOp TAC. For logical and "&&" and logical or "||", I expand them
+       into normal operations.
+       #+BEGIN_SRC cpp
+       // for logical and &&
+        Location* zero = irg->GenLoadConstant(0);
+
+        Location* llres = irg->GenBinaryOp("!=", zero, lres);
+        Location* rrres = irg->GenBinaryOp("!=", zero, rres);
+        return irg->GenBinaryOp("&", llres, rrres);       
+       #+END_SRC
+        For operator associated with assignment, firstly the result is
+       calculated as normal operations, and then an reference location(the
+       address) is generated via =emitMemoryLocation=, then a store tac is
+       generated.
+
+    2. Unary Operators
+
+       transformed into binary operators. Bitwise negation is transformed into
+       an XOR with -1.
+
+    3. Call function
+
+       The arguments will be emit first and PushParam is genrated.(The last
+       argument is pushed firstly).
+
+    4. ArrsExpr (array access)
+
+       The =emitMemoryLocation= method will generate a =LoadAddress= TAC and the
+       location contains that address will returned. For normal =emit= method, a
+       =Load= TAC is generated from the memory location. Because arrays are not
+       allowed to have dimension more than 2, therefore calculation of the
+       offset is hardcoded
+       #+BEGIN_SRC cpp
+Location* ArrsExpr::emitMemoryLocation(IRGenerator *irg)
+{
+    Location* base = irg->GetLocation(var->getId());
+    Location* baseLoc = irg->GenLoadAddress(base);
+    int dim = var->getDim();
+    if (dim == 0) {
+        baseLoc->locationRef = true;
+        return baseLoc;
+    } else {
+        Location* fourL = irg->GenLoadConstant(4);
+        Location* arg0 = arrs->front()->emit(irg);
+        Location* baseLoc = irg->GenLoadAddress(base);
+
+        if (dim == 1) {
+            Location* fl = irg->GenBinaryOp("+", baseLoc, 
+                                    irg->GenBinaryOp("*", arg0, fourL));
+            fl->locationRef = true;
+            return fl;
+        } else {
+            // two dimension
+            int numInRow = var->getSize();
+            Location* col = irg->GenLoadConstant(numInRow);
+            Location* arg1 = arrs->back()->emit(irg);
+            Location* tmp = irg->GenBinaryOp("+", 
+                                irg->GenBinaryOp("*", arg0, col), arg1);
+
+            Location* fl = irg->GenBinaryOp("+", baseLoc, 
+                                 irg->GenBinaryOp("*", tmp, fourL));
+            fl->locationRef = true;
+            return fl;
+        }
+    }
+}
+       #+END_SRC
+
+    5. AccessExpr struct field access
+       
+       This part is very similar to array access (one dimension array);
+
+    6. IntExpr
+       
+       A =LoadConstant= TAC is genrated with the int value associated with the node.
+
+
+ 
+* Code Generation
+  Once the IR is generated, each TAC will be translated into mips code. If
+  =-tac= is in the end of command line arguments, then the TAC codes will be
+  written to the file, otherwise mips code will be generated.
+
+  The code generation work is done with the =Mips= class.
+  The Mips class defines an object capable of emitting MIPS
+  instructions and managing the allocation and use of registers.
+  It is used by the Tac instruction classes to convert each
+  instruction to the appropriate MIPS equivalent.
+
+  Below is a small generated mips snippet
+
+  [[file:img/mips.png]]
+
+** Instruction Selection
+   1. Binary Operation
+      
+      For operator: "*", "/", "%", "+", "-", <<", ">>", ">", ">=", "<", "<=",
+     "==", "!=", "&", "^", "|", corresponding mips instructions exist, a mapping
+      works well.
+
+   2. Load & Store
+
+      =li= instruction is used for =LoadConstant=, =la= is used for
+      =LoadAddress=, =lw= is used for =Load=, =sw= is used for =Store=
+
+   3. Others
+      =move= instruction for =Assign=, =b= for =Goto=, =beqz= for =IfZ=. Details
+      of functions call are listed in the file =mips.h/cpp=
+
+   4. Read & Write
+
+      syscall of mips is used.
+      #+BEGIN_SRC cpp
+void Mips::EmitRead(Location *dst) {
+    Emit("li $v0, 5 # readint syscall code");
+    Emit("syscall");
+    Register rd = GetRegister(dst);
+    Emit("sw $v0, %d(%s)", 0,regs[rd].name);
+}
+
+void Mips::EmitWrite(Location *src) {
+    Emit("li $v0, 1 # readint syscall code");
+    Register r = GetRegister(src);
+    Emit("move $a0, %s", regs[r].name);
+    Emit("syscall");
+}      
+      #+END_SRC
+
+** Register allocation
+   I used a very basic register policy in this project. A method =GetRegister=
+   is used to get a register for use.
+
+   Given a location for a current var, a reason (ForRead or ForWrite)
+   and up to two registers to avoid, this method will assign
+ to a var to register trying these alternatives in order:
+ 1. if that var is already in a register ("same" is determined
+      by matching name and same scope), we use that one
+ 2. find an empty register to use for the var
+ 3. find an in-use register that is not dirty.  We don't need
+     to write value back to memory since it's clean, so we just
+      replace with the new var
+ 4. spill an in-use, dirty register, by writing its contents to
+      memory and then replace with the new var
+  For steps 3 & 4, we respect the registers given to avoid (ie the
+  other operands in this operation). The register descriptors are
+  updated to show the new state of the world. If for read, we
+  load the current value from memory into the register. If for
+  write, we mark the register as dirty (since it is getting a
+  new value).
+
+
+
+

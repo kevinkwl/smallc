@@ -1,0 +1,28 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void} \PYG{n}{FuncExtDef}\PYG{o}{::}\PYG{n}{emit}\PYG{p}{(}\PYG{n}{IRGenerator} \PYG{o}{*}\PYG{n}{irg}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+    \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{NewScope}\PYG{p}{();}
+
+    \PYG{n}{string} \PYG{n}{tmp} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}f\PYGZus{}\PYGZdq{}} \PYG{o}{+} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{id}\PYG{p}{;}
+    \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenLabel}\PYG{p}{(}\PYG{n}{tmp}\PYG{p}{);}
+
+    \PYG{k}{if} \PYG{p}{(}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{id} \PYG{o}{==} \PYG{l+s}{\PYGZdq{}main\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenLabel}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}main\PYGZdq{}}\PYG{p}{);}
+
+    \PYG{n}{BeginFunc}\PYG{o}{*} \PYG{n}{bf} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBeginFunc}\PYG{p}{();}
+
+    \PYG{c+c1}{// gen stack space for parameter}
+    \PYG{k+kt}{int} \PYG{n}{onStackParam} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{k}{for} \PYG{p}{(}\PYG{k}{const} \PYG{n}{string} \PYG{o}{\PYGZam{}}\PYG{n+nl}{p} \PYG{p}{:} \PYG{o}{*}\PYG{n}{params}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{InsertLocation}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{k}{new} \PYG{n}{Location}\PYG{p}{(}\PYG{n}{fpRelative}\PYG{p}{,} \PYG{l+m+mi}{4} \PYG{o}{+} \PYG{n}{onStackParam} \PYG{o}{*} \PYG{l+m+mi}{4}\PYG{p}{,} \PYG{n}{p}\PYG{p}{));}
+        \PYG{o}{++}\PYG{n}{onStackParam}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+
+    \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{stmtBlock}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{emit}\PYG{p}{(}\PYG{n}{irg}\PYG{p}{);}
+
+    \PYG{n}{bf}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{SetFrameSize}\PYG{p}{(}\PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{currentStackSize} \PYG{o}{*} \PYG{l+m+mi}{4}\PYG{p}{);}
+    \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenEndFunc}\PYG{p}{();}
+
+    \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{RemoveScope}\PYG{p}{();}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

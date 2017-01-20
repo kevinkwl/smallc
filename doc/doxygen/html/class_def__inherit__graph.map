@@ -1,0 +1,5 @@
+<map id="Def" name="Def">
+<area shape="rect" id="node3" href="$class_s_def.html" title="{SDef\n||+ SDef()\l+ dump()\l}" alt="" coords="5,288,80,375"/>
+<area shape="rect" id="node4" href="$class_var_def.html" title="{VarDef\n||+ VarDef()\l+ dump()\l}" alt="" coords="104,288,187,375"/>
+<area shape="rect" id="node2" href="$class_ast_node.html" title="{AstNode\n|# line_number\l|+ AstNode()\l+ ~AstNode()\l+ dump()\l+ get_line_number()\l}" alt="" coords="23,5,164,119"/>
+</map>

@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+for (StructDef* structdef : *this\PYGZhy{}\PYGZgt{}sdefs) \PYGZob{}
+    structdef\PYGZhy{}\PYGZgt{}check();
+    fields.insert(fields.end(),
+           structdef\PYGZhy{}\PYGZgt{}sdecs\PYGZhy{}\PYGZgt{}begin(), structdef\PYGZhy{}\PYGZgt{}sdecs\PYGZhy{}\PYGZgt{}end());
+\PYGZcb{}
+\end{Verbatim}

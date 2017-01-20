@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{p}{(}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{var}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getType}\PYG{p}{()} \PYG{o}{!=} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{init}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getType}\PYG{p}{()} \PYG{o}{||}
+    \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{var}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getSize}\PYG{p}{()} \PYG{o}{\PYGZlt{}} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{init}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getSize}\PYG{p}{())} \PYG{p}{\PYGZob{}}
+    \PYG{n}{InitilizeError}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Incompatible initializer\PYGZdq{}}\PYG{p}{,} \PYG{k}{this}\PYG{p}{);}
+ \PYG{p}{\PYGZcb{}}
+\end{Verbatim}

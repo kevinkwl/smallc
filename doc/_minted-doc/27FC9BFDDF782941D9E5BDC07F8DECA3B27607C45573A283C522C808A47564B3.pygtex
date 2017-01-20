@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void} \PYG{n}{Mips}\PYG{o}{::}\PYG{n}{EmitRead}\PYG{p}{(}\PYG{n}{Location} \PYG{o}{*}\PYG{n}{dst}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{Emit}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}li \PYGZdl{}v0, 5 \PYGZsh{} readint syscall code\PYGZdq{}}\PYG{p}{);}
+    \PYG{n}{Emit}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}syscall\PYGZdq{}}\PYG{p}{);}
+    \PYG{n}{Register} \PYG{n}{rd} \PYG{o}{=} \PYG{n}{GetRegister}\PYG{p}{(}\PYG{n}{dst}\PYG{p}{);}
+    \PYG{n}{Emit}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}sw \PYGZdl{}v0, \PYGZpc{}d(\PYGZpc{}s)\PYGZdq{}}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{regs}\PYG{p}{[}\PYG{n}{rd}\PYG{p}{].}\PYG{n}{name}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void} \PYG{n}{Mips}\PYG{o}{::}\PYG{n}{EmitWrite}\PYG{p}{(}\PYG{n}{Location} \PYG{o}{*}\PYG{n}{src}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{Emit}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}li \PYGZdl{}v0, 1 \PYGZsh{} readint syscall code\PYGZdq{}}\PYG{p}{);}
+    \PYG{n}{Register} \PYG{n}{r} \PYG{o}{=} \PYG{n}{GetRegister}\PYG{p}{(}\PYG{n}{src}\PYG{p}{);}
+    \PYG{n}{Emit}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}move \PYGZdl{}a0, \PYGZpc{}s\PYGZdq{}}\PYG{p}{,} \PYG{n}{regs}\PYG{p}{[}\PYG{n}{r}\PYG{p}{].}\PYG{n}{name}\PYG{p}{);}
+    \PYG{n}{Emit}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}syscall\PYGZdq{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

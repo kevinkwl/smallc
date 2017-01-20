@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void} \PYG{n+nf}{save\PYGZus{}num}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+    \PYG{n}{try} \PYG{p}{\PYGZob{}}
+      \PYG{n}{yylval}\PYG{p}{.}\PYG{n}{ival} \PYG{o}{=} \PYG{n}{stoi}\PYG{p}{(}\PYG{n}{string}\PYG{p}{(}\PYG{n}{yytext}\PYG{p}{),} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{);} \PYG{c+c1}{// autodetect base}
+    \PYG{p}{\PYGZcb{}} \PYG{n}{catch} \PYG{p}{(}\PYG{n}{std}\PYG{o}{::}\PYG{n}{invalid\PYGZus{}argument}\PYG{o}{\PYGZam{}} \PYG{n}{e}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+      \PYG{n}{std}\PYG{o}{::}\PYG{n}{cerr} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}Error token: \PYGZdq{}}\PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{yytext} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{} found at line: \PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{curr\PYGZus{}lineno}
+            \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}: invalid number.\PYGZdq{}}\PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+      \PYG{n}{yylval}\PYG{p}{.}\PYG{n}{ival} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}} \PYG{n}{catch} \PYG{p}{(}\PYG{n}{std}\PYG{o}{::}\PYG{n}{out\PYGZus{}of\PYGZus{}range}\PYG{o}{\PYGZam{}} \PYG{n}{e}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{std}\PYG{o}{::}\PYG{n}{cerr} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}Error token: \PYGZdq{}}\PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{yytext} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{} found at line: \PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{curr\PYGZus{}lineno}
+          \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}: out of range( \PYGZhy{}2\PYGZca{}(31), 2\PYGZca{}(31) ).\PYGZdq{}}\PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+    \PYG{n}{yylval}\PYG{p}{.}\PYG{n}{ival} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

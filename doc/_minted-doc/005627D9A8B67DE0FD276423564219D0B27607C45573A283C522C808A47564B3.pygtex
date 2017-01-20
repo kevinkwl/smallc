@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{FuncExtDef}\PYG{o}{*} \PYG{n}{MainFunc} \PYG{o}{=} \PYG{n}{funcTbl}\PYG{p}{.}\PYG{n}{lookup}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}main\PYGZdq{}}\PYG{p}{);}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{MainFunc} \PYG{o}{==} \PYG{n+nb}{NULL} \PYG{o}{||} \PYG{n}{MainFunc}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getParamCount}\PYG{p}{()} \PYG{o}{!=} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{o}{++}\PYG{n}{semant\PYGZus{}errors}\PYG{p}{;}
+    \PYG{n}{err} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}Program must contain a function int main()!\PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

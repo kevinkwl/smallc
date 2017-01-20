@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZpc{}right ASSIGN ADD\PYGZus{}ASSIGN SUB\PYGZus{}ASSIGN MUL\PYGZus{}ASSIGN DIV\PYGZus{}ASSIGN AND\PYGZus{}ASSIGN XOR\PYGZus{}ASSIGN OR\PYGZus{}ASSIGN SHL\PYGZus{}ASSIGN SHR\PYGZus{}ASSIGN
+\PYGZpc{}left L\PYGZus{}OR
+\PYGZpc{}left L\PYGZus{}AND
+\PYGZpc{}left B\PYGZus{}OR
+\PYGZpc{}left B\PYGZus{}XOR
+\PYGZpc{}left B\PYGZus{}AND
+\PYGZpc{}left EQ NEQ
+\PYGZpc{}left GT GTE LT LTE
+\PYGZpc{}left SHL SHR
+\PYGZpc{}left ADD SUB
+\PYGZpc{}left MUL DIV MOD
+\PYGZpc{}right UMINUS L\PYGZus{}NOT P\PYGZus{}ADD P\PYGZus{}SUB B\PYGZus{}NOT
+\PYGZpc{}left DOT LP RP LB RB
+
+\PYGZpc{}right THEN ELSE
+\end{Verbatim}

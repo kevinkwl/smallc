@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{ExprType}\PYG{o}{::}\PYG{n}{type} \PYG{n}{cond\PYGZus{}tp} \PYG{o}{=} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{cond}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{check}\PYG{p}{();}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{cond\PYGZus{}tp} \PYG{o}{!=} \PYG{n}{ExprType}\PYG{o}{::}\PYG{n}{INTEGER}\PYG{p}{)}
+    \PYG{n}{CondTypeError}\PYG{p}{(}\PYG{n}{cond\PYGZus{}tp}\PYG{p}{,} \PYG{k}{this}\PYG{p}{);}
+\end{Verbatim}

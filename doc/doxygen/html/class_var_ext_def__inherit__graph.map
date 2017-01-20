@@ -1,0 +1,4 @@
+<map id="VarExtDef" name="VarExtDef">
+<area shape="rect" id="node2" href="$class_ext_def.html" title="{ExtDef\n||+ check()\l}" alt="" coords="38,167,114,240"/>
+<area shape="rect" id="node3" href="$class_ast_node.html" title="{AstNode\n|# line_number\l|+ AstNode()\l+ ~AstNode()\l+ dump()\l+ get_line_number()\l}" alt="" coords="5,5,146,119"/>
+</map>

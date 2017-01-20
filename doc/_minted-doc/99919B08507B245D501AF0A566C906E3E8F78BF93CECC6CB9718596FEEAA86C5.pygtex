@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+| SUB   EXPS \PYGZpc{}prec UMINUS    \PYGZob{} \PYGZdl{}\PYGZdl{} = new UopExpr(*\PYGZdl{}1, \PYGZdl{}2); \PYGZcb{}
+\end{Verbatim}

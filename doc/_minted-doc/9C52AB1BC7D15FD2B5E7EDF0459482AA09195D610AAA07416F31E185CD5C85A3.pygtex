@@ -1,0 +1,31 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZpc{}}\PYG{k}{union} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{ival}\PYG{p}{;}
+    \PYG{n}{std}\PYG{o}{::}\PYG{n}{string}\PYG{o}{*} \PYG{n}{sval}\PYG{p}{;}
+    \PYG{n}{Program}\PYG{o}{*} \PYG{n}{program}\PYG{p}{;}
+    \PYG{n}{ExtDefList}\PYG{o}{*} \PYG{n}{extdefs}\PYG{p}{;}
+    \PYG{n}{ExtDef}\PYG{o}{*} \PYG{n}{extdef}\PYG{p}{;}
+    \PYG{n}{ExtVar}\PYG{o}{*} \PYG{n}{extvar}\PYG{p}{;}
+    \PYG{n}{ExtVarList}\PYG{o}{*} \PYG{n}{extvars}\PYG{p}{;}
+    \PYG{n}{SExtVar}\PYG{o}{*} \PYG{n}{sextvar}\PYG{p}{;}
+    \PYG{n}{SExtVarList}\PYG{o}{*} \PYG{n}{sextvars}\PYG{p}{;}
+    \PYG{n}{StructSpec}\PYG{o}{*} \PYG{n}{stspec}\PYG{p}{;}
+    \PYG{n}{Paras}\PYG{o}{*} \PYG{n}{paras}\PYG{p}{;}
+    \PYG{n}{StmtBlock}\PYG{o}{*} \PYG{n}{stmtblock}\PYG{p}{;}
+    \PYG{n}{StmtList}\PYG{o}{*} \PYG{n}{stmts}\PYG{p}{;}
+    \PYG{n}{Stmt}\PYG{o}{*} \PYG{n}{stmt}\PYG{p}{;}
+    \PYG{n}{DefList}\PYG{o}{*} \PYG{n}{defs}\PYG{p}{;}
+    \PYG{n}{Def}\PYG{o}{*} \PYG{n}{def}\PYG{p}{;}
+    \PYG{n}{StructDef}\PYG{o}{*} \PYG{n}{stdef}\PYG{p}{;}
+    \PYG{n}{StructDefList}\PYG{o}{*} \PYG{n}{stdefs}\PYG{p}{;}
+    \PYG{n}{SDec}\PYG{o}{*} \PYG{n}{sdec}\PYG{p}{;}
+    \PYG{n}{SDecList}\PYG{o}{*} \PYG{n}{sdecs}\PYG{p}{;}
+    \PYG{n}{Dec}\PYG{o}{*} \PYG{n}{dec}\PYG{p}{;}
+    \PYG{n}{DecList}\PYG{o}{*} \PYG{n}{decs}\PYG{p}{;}
+    \PYG{n}{Var}\PYG{o}{*} \PYG{n}{var}\PYG{p}{;}
+    \PYG{n}{Init}\PYG{o}{*} \PYG{n}{init}\PYG{p}{;}
+    \PYG{n}{Arrs}\PYG{o}{*} \PYG{n}{arrs}\PYG{p}{;}
+    \PYG{n}{Args}\PYG{o}{*} \PYG{n}{args}\PYG{p}{;}
+    \PYG{n}{Expr}\PYG{o}{*} \PYG{n}{exp}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

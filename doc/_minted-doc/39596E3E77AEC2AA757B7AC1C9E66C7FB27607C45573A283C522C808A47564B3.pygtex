@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{int} \PYG{n}{n\PYGZus{}args\PYGZus{}prov} \PYG{o}{=} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{args}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{size}\PYG{p}{();}
+\PYG{k+kt}{int} \PYG{n}{n\PYGZus{}args\PYGZus{}need} \PYG{o}{=} \PYG{n}{func}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getParamCount}\PYG{p}{();}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{n\PYGZus{}args\PYGZus{}need} \PYG{o}{!=} \PYG{n}{n\PYGZus{}args\PYGZus{}prov}\PYG{p}{)}
+    \PYG{n}{WrongNumberOfArgument}\PYG{p}{(}\PYG{k}{this}\PYG{p}{);}
+ \PYG{c+c1}{// check arguments}
+\PYG{k}{for} \PYG{p}{(}\PYG{n}{Expr}\PYG{o}{*} \PYG{n+nl}{exp}\PYG{p}{:} \PYG{o}{*}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{args}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{ExprType}\PYG{o}{::}\PYG{n}{type} \PYG{n}{tp} \PYG{o}{=} \PYG{n}{exp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{check}\PYG{p}{();}
+    \PYG{k}{if} \PYG{p}{(}\PYG{n}{tp} \PYG{o}{!=} \PYG{n}{ExprType}\PYG{o}{::}\PYG{n}{INTEGER}\PYG{p}{)}
+        \PYG{n}{ExpNotInt}\PYG{p}{(}\PYG{n}{exp}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

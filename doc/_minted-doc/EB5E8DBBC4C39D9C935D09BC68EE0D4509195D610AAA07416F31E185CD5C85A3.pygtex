@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{struct} \PYG{n}{A} \PYG{p}{\PYGZob{}}
+   \PYG{k+kt}{int} \PYG{n}{a}\PYG{p}{;}
+\PYG{p}{\PYGZcb{};}
+\end{Verbatim}

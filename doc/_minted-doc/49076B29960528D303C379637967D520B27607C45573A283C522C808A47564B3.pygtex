@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// check if lval}
+\PYG{k}{if} \PYG{p}{(}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{op}\PYG{p}{.}\PYG{n}{find}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}=\PYGZdq{}}\PYG{p}{)} \PYG{o}{!=} \PYG{n}{std}\PYG{o}{::}\PYG{n}{string}\PYG{o}{::}\PYG{n}{npos} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{op} \PYG{o}{!=} \PYG{l+s}{\PYGZdq{}==\PYGZdq{}}
+        \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{op} \PYG{o}{!=} \PYG{l+s}{\PYGZdq{}\PYGZgt{}=\PYGZdq{}} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{op} \PYG{o}{!=} \PYG{l+s}{\PYGZdq{}\PYGZlt{}=\PYGZdq{}}
+        \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{op} \PYG{o}{!=} \PYG{l+s}{\PYGZdq{}!=\PYGZdq{}}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{lexp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{isLval}\PYG{p}{())} \PYG{p}{\PYGZob{}}
+        \PYG{o}{++}\PYG{n}{semant\PYGZus{}errors}\PYG{p}{;}
+        \PYG{n}{err} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}line \PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{get\PYGZus{}line\PYGZus{}number}\PYG{p}{()} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{} \PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}}  \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}error: \PYGZdq{}}
+            \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}not an lvalue\PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

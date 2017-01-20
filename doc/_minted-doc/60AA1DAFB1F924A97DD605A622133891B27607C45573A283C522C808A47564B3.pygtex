@@ -1,0 +1,26 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{typedef} \PYG{k}{enum} \PYG{p}{\PYGZob{}}\PYG{n}{fpRelative}\PYG{p}{,} \PYG{n}{gpRelative}\PYG{p}{\PYGZcb{}} \PYG{n}{Segment}\PYG{p}{;}
+
+\PYG{k}{class} \PYG{n+nc}{Location}
+\PYG{p}{\PYGZob{}}
+\PYG{k}{protected}\PYG{o}{:}
+    \PYG{k}{const} \PYG{n}{string} \PYG{n}{variableName}\PYG{p}{;}
+    \PYG{n}{Segment} \PYG{n}{segment}\PYG{p}{;}
+    \PYG{k+kt}{int} \PYG{n}{offset}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{o}{:}
+    \PYG{n}{Location}\PYG{p}{(}\PYG{n}{Segment} \PYG{n}{seg}\PYG{p}{,} \PYG{k+kt}{int} \PYG{n}{offset}\PYG{p}{,} \PYG{k}{const} \PYG{n}{string} \PYG{n}{name}\PYG{p}{);}
+
+    \PYG{k}{const} \PYG{n}{string} \PYG{n+nf}{GetName}\PYG{p}{()} \PYG{k}{const}     \PYG{p}{\PYGZob{}} \PYG{k}{return} \PYG{n}{variableName}\PYG{p}{;} \PYG{p}{\PYGZcb{}}
+    \PYG{n}{Segment} \PYG{n+nf}{GetSegment}\PYG{p}{()} \PYG{k}{const}      \PYG{p}{\PYGZob{}} \PYG{k}{return} \PYG{n}{segment}\PYG{p}{;} \PYG{p}{\PYGZcb{}}
+    \PYG{k+kt}{int} \PYG{n+nf}{GetOffset}\PYG{p}{()} \PYG{k}{const}           \PYG{p}{\PYGZob{}} \PYG{k}{return} \PYG{n}{offset}\PYG{p}{;} \PYG{p}{\PYGZcb{}}
+
+    \PYG{k+kt}{bool} \PYG{n}{locationRef}\PYG{p}{;}
+
+    \PYG{k+kt}{bool} \PYG{k}{operator}\PYG{o}{==}\PYG{p}{(}\PYG{k}{const} \PYG{n}{Location}\PYG{o}{\PYGZam{}} \PYG{n}{that}\PYG{p}{)} \PYG{k}{const} \PYG{p}{\PYGZob{}}
+        \PYG{k}{return} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GetName}\PYG{p}{()} \PYG{o}{==} \PYG{n}{that}\PYG{p}{.}\PYG{n}{GetName}\PYG{p}{()} \PYG{o}{\PYGZam{}\PYGZam{}}
+       \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GetSegment}\PYG{p}{()} \PYG{o}{==} \PYG{n}{that}\PYG{p}{.}\PYG{n}{GetSegment}\PYG{p}{()} \PYG{o}{\PYGZam{}\PYGZam{}}
+       \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GetOffset}\PYG{p}{()} \PYG{o}{==} \PYG{n}{that}\PYG{p}{.}\PYG{n}{GetOffset}\PYG{p}{();}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{};}
+\end{Verbatim}

@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{Paras}\PYG{o}{*} \PYG{n}{pp} \PYG{o}{=} \PYG{k}{new} \PYG{n}{Paras}\PYG{p}{;}
+\PYG{n}{pp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{push\PYGZus{}front}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}x\PYGZdq{}}\PYG{p}{);}
+\PYG{n}{FuncExtDef}\PYG{o}{*} \PYG{n}{read} \PYG{o}{=} \PYG{k}{new} \PYG{n}{FuncExtDef}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}read\PYGZdq{}}\PYG{p}{,} \PYG{n}{pp}\PYG{p}{,} \PYG{k}{nullptr}\PYG{p}{);}
+\PYG{n}{FuncExtDef}\PYG{o}{*} \PYG{n}{write} \PYG{o}{=} \PYG{k}{new} \PYG{n}{FuncExtDef}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}write\PYGZdq{}}\PYG{p}{,} \PYG{n}{pp}\PYG{p}{,} \PYG{k}{nullptr}\PYG{p}{);}
+\PYG{n}{funcTbl}\PYG{p}{.}\PYG{n}{put}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}read\PYGZdq{}}\PYG{p}{,} \PYG{n}{read}\PYG{p}{);}
+\PYG{n}{funcTbl}\PYG{p}{.}\PYG{n}{put}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}write\PYGZdq{}}\PYG{p}{,} \PYG{n}{write}\PYG{p}{);}
+\end{Verbatim}

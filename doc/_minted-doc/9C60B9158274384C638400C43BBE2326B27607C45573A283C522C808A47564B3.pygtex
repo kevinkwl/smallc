@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void} \PYG{n}{IntInit}\PYG{o}{::}\PYG{n}{eval}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{k+kt}{int} \PYG{n}{v} \PYG{o}{=} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{exp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{eval}\PYG{p}{();}
+    \PYG{c+c1}{//cout \PYGZlt{}\PYGZlt{} \PYGZdq{}\PYGZsh{} compute: \PYGZdq{} \PYGZlt{}\PYGZlt{} v \PYGZlt{}\PYGZlt{} endl;}
+    \PYG{n}{value}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{push\PYGZus{}back}\PYG{p}{(}\PYG{n}{v}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void} \PYG{n}{ArrayInit}\PYG{o}{::}\PYG{n}{eval}\PYG{p}{()} \PYG{p}{\PYGZob{}}
+    \PYG{k}{for} \PYG{p}{(}\PYG{n}{Expr}\PYG{o}{*} \PYG{n+nl}{exp}\PYG{p}{:} \PYG{o}{*}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{args}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+        \PYG{k+kt}{int} \PYG{n}{v} \PYG{o}{=} \PYG{n}{exp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{eval}\PYG{p}{();}
+        \PYG{c+c1}{//cout \PYGZlt{}\PYGZlt{} \PYGZdq{}\PYGZsh{} compute: \PYGZdq{} \PYGZlt{}\PYGZlt{} v \PYGZlt{}\PYGZlt{} endl;}
+        \PYG{n}{value}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{push\PYGZus{}back}\PYG{p}{(}\PYG{n}{v}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+EXTDEF \PYGZhy{}\PYGZgt{} TYPE EXTVARS SEMI
+        | STSPEC SEXTVARS SEMI
+        | TYPE ID LP PARAS RP STBLOCK     (substitute FUNC in)
+\end{Verbatim}

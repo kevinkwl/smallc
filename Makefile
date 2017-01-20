@@ -2,7 +2,7 @@
 
 CC=g++
 CXXFLAGS= -g -Wall -std=c++11
-LIB= -ll
+LIB=
 
 SRC= main.cpp utils.cpp ast.cpp semant.cpp
 
@@ -26,12 +26,9 @@ lexer.cc: smallc.l
 parser.cc: smallc.y
 	${BISON} smallc.y
 
-parser: ${FLEXGEN} ${BISONGEN}
-	${CC} ${CXXFLAGS} ${LIB} ${FLEXGEN} ${BISONGEN} ${SRC} -o parser
-
 all: ${FLEXGEN} ${BISONGEN}
 
 
 
 clean:
-	rm -rf ${FLEXGEN} ${BISONGEN} *.o *.output parser
+	rm -rf ${FLEXGEN} ${BISONGEN} *.o *.output scc

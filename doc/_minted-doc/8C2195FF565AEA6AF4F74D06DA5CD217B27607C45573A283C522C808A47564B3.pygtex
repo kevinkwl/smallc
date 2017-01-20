@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{SymbolTable}\PYG{o}{\PYGZlt{}}\PYG{n}{Var}\PYG{o}{*\PYGZgt{}} \PYG{n}{IntVarTbl}\PYG{p}{;}
+\PYG{n}{SymbolTable}\PYG{o}{\PYGZlt{}}\PYG{n}{StructSpec}\PYG{o}{*\PYGZgt{}} \PYG{n}{StVarTbl}\PYG{p}{;}
+\PYG{n}{SymbolTable}\PYG{o}{\PYGZlt{}}\PYG{n}{StructSpec}\PYG{o}{*\PYGZgt{}} \PYG{n}{StSpecTbl}\PYG{p}{;}
+\PYG{n}{SymbolTable}\PYG{o}{\PYGZlt{}}\PYG{n}{FuncExtDef}\PYG{o}{*\PYGZgt{}} \PYG{n}{funcTbl}\PYG{p}{;}
+\end{Verbatim}

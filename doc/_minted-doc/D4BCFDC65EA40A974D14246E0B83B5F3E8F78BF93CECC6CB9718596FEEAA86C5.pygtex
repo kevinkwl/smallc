@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdq{}.\PYGZdq{}    \PYGZob{} save\PYGZus{}str(); return(DOT); \PYGZcb{}
+\PYGZdq{}+\PYGZdq{}    \PYGZob{} save\PYGZus{}str(); return(ADD); \PYGZcb{}
+\PYGZdq{}\PYGZgt{}\PYGZgt{}\PYGZdq{}   \PYGZob{} save\PYGZus{}str(); return(SHR); \PYGZcb{}
+\PYGZdq{}\PYGZgt{}\PYGZdq{}    \PYGZob{} save\PYGZus{}str(); return(GT); \PYGZcb{}
+\PYGZdq{}\PYGZgt{}=\PYGZdq{}   \PYGZob{} save\PYGZus{}str(); return(GTE); \PYGZcb{}
+\PYGZdq{}\PYGZam{}\PYGZdq{}    \PYGZob{} save\PYGZus{}str(); return(B\PYGZus{}AND); \PYGZcb{}
+\PYGZdq{}\PYGZam{}\PYGZam{}\PYGZdq{}   \PYGZob{} save\PYGZus{}str(); return(L\PYGZus{}AND); \PYGZcb{}
+\PYGZdq{}=\PYGZdq{}    \PYGZob{} save\PYGZus{}str(); return(ASSIGN); \PYGZcb{}
+\PYGZdq{}\PYGZam{}=\PYGZdq{}   \PYGZob{} save\PYGZus{}str(); return(AND\PYGZus{}ASSIGN); \PYGZcb{}
+\PYGZdq{}\PYGZgt{}\PYGZgt{}=\PYGZdq{}   \PYGZob{} save\PYGZus{}str(); return(SHR\PYGZus{}ASSIGN); \PYGZcb{}
+\PYGZdq{}!\PYGZdq{}     \PYGZob{} save\PYGZus{}str(); return(L\PYGZus{}NOT); \PYGZcb{}
+\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}    \PYGZob{} save\PYGZus{}str(); return(P\PYGZus{}SUB); \PYGZcb{}
+\end{Verbatim}

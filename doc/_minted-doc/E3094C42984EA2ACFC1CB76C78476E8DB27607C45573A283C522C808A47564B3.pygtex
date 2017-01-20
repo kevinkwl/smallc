@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// for logical and \PYGZam{}\PYGZam{}}
+ \PYG{n}{Location}\PYG{o}{*} \PYG{n}{zero} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenLoadConstant}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{);}
+
+ \PYG{n}{Location}\PYG{o}{*} \PYG{n}{llres} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}!=\PYGZdq{}}\PYG{p}{,} \PYG{n}{zero}\PYG{p}{,} \PYG{n}{lres}\PYG{p}{);}
+ \PYG{n}{Location}\PYG{o}{*} \PYG{n}{rrres} \PYG{o}{=} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}!=\PYGZdq{}}\PYG{p}{,} \PYG{n}{zero}\PYG{p}{,} \PYG{n}{rres}\PYG{p}{);}
+ \PYG{k}{return} \PYG{n}{irg}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{GenBinaryOp}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZam{}\PYGZdq{}}\PYG{p}{,} \PYG{n}{llres}\PYG{p}{,} \PYG{n}{rrres}\PYG{p}{);}
+\end{Verbatim}

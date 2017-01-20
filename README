@@ -39,7 +39,7 @@ Instructions (Ubuntu/Debian)
 
 	Use spim to run asm file
 
-	% /Path/to/spim output.asm
+	% /Path/to/spim -file output.asm
 
 
 

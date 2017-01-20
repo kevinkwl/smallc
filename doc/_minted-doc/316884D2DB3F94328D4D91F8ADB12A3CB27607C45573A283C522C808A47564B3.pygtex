@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{Instruction} \PYG{p}{\PYGZob{}}
+\PYG{k}{protected}\PYG{o}{:}
+    \PYG{k+kt}{char} \PYG{n}{printed}\PYG{p}{[}\PYG{l+m+mi}{128}\PYG{p}{];}
+\PYG{k}{public}\PYG{o}{:}
+    \PYG{k}{virtual} \PYG{o}{\PYGZti{}}\PYG{n}{Instruction}\PYG{p}{()} \PYG{p}{\PYGZob{}\PYGZcb{}}
+    \PYG{k}{virtual} \PYG{k+kt}{void} \PYG{n}{Print}\PYG{p}{();}
+    \PYG{k}{virtual} \PYG{k+kt}{void} \PYG{n+nf}{EmitSpecific}\PYG{p}{(}\PYG{n}{Mips} \PYG{o}{*}\PYG{n}{mips}\PYG{p}{)} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+    \PYG{k}{virtual} \PYG{k+kt}{void} \PYG{n+nf}{Emit}\PYG{p}{(}\PYG{n}{Mips} \PYG{o}{*}\PYG{n}{mips}\PYG{p}{);}
+\PYG{p}{\PYGZcb{};}
+\end{Verbatim}

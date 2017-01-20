@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{string} \PYG{n+nf}{NewLabel}\PYG{p}{();}
+\PYG{n}{Location} \PYG{o}{*}\PYG{n+nf}{GenGlobalVar}\PYG{p}{(}\PYG{k}{const} \PYG{n}{string} \PYG{n}{name}\PYG{p}{,} \PYG{k+kt}{unsigned} \PYG{k+kt}{int} \PYG{n}{size}\PYG{p}{,} \PYG{n}{vector}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{int}\PYG{o}{\PYGZgt{}} \PYG{o}{*}\PYG{n}{init}\PYG{p}{);}
+\PYG{n}{Location} \PYG{o}{*}\PYG{n+nf}{GetNewLocationOnStack}\PYG{p}{(}\PYG{k}{const} \PYG{n}{string} \PYG{n}{name}\PYG{p}{);}
+\PYG{n}{Location} \PYG{o}{*}\PYG{n+nf}{GetNewBulkLocationOnStack}\PYG{p}{(}\PYG{k}{const} \PYG{n}{string} \PYG{n}{name}\PYG{p}{,} \PYG{k+kt}{unsigned} \PYG{k+kt}{int} \PYG{n}{size}\PYG{p}{);}
+\PYG{n}{Location} \PYG{o}{*}\PYG{n+nf}{GenTempVar}\PYG{p}{();}
+\end{Verbatim}

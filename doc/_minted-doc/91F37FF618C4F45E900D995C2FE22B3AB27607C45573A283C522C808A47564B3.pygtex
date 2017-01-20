@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{p}{(}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{id} \PYG{o}{==} \PYG{l+s}{\PYGZdq{}read\PYGZdq{}} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{o}{!}\PYG{n}{exp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{isLval}\PYG{p}{())} \PYG{p}{\PYGZob{}}
+    \PYG{o}{++}\PYG{n}{semant\PYGZus{}errors}\PYG{p}{;}
+    \PYG{n}{err} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}line \PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{exp}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{get\PYGZus{}line\PYGZus{}number}\PYG{p}{()} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{} \PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}error: \PYGZdq{}}
+    \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{l+s}{\PYGZdq{}not an lvalue\PYGZdq{}} \PYG{o}{\PYGZlt{}\PYGZlt{}} \PYG{n}{endl}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

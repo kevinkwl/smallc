@@ -1,0 +1,5 @@
+<map id="Init" name="Init">
+<area shape="rect" id="node3" href="$class_array_init.html" title="{ArrayInit\n||+ ArrayInit()\l+ dump()\l+ getType()\l}" alt="" coords="5,288,96,388"/>
+<area shape="rect" id="node4" href="$class_int_init.html" title="{IntInit\n||+ IntInit()\l+ dump()\l+ getType()\l}" alt="" coords="119,288,209,388"/>
+<area shape="rect" id="node2" href="$class_ast_node.html" title="{AstNode\n|# line_number\l|+ AstNode()\l+ ~AstNode()\l+ dump()\l+ get_line_number()\l}" alt="" coords="36,5,177,119"/>
+</map>

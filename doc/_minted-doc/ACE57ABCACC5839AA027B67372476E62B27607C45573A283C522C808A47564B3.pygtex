@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{static} \PYG{n}{ostringstream} \PYG{n}{err}\PYG{p}{;}
+\PYG{k}{static} \PYG{k+kt}{int} \PYG{n}{semant\PYGZus{}errors} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+\end{Verbatim}

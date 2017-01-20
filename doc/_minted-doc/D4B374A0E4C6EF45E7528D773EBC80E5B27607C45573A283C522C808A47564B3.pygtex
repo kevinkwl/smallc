@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{int} \PYG{n}{dim} \PYG{o}{=} \PYG{n}{v}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{getDim}\PYG{p}{();}
+\PYG{k+kt}{int} \PYG{n}{ac} \PYG{o}{=} \PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{arrs}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{size}\PYG{p}{();}
+\PYG{k}{if} \PYG{p}{(}\PYG{n}{dim} \PYG{o}{!=} \PYG{n}{ac}\PYG{p}{)} \PYG{p}{\PYGZob{}}
+    \PYG{n}{ArrayDimensionNotMatched}\PYG{p}{(}\PYG{k}{this}\PYG{p}{);}
+\end{Verbatim}

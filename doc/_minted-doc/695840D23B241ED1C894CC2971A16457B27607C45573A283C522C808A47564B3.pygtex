@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{class} \PYG{n+nc}{LoadConstant}\PYG{p}{;} \PYG{c+c1}{// load immediate}
+\PYG{k}{class} \PYG{n+nc}{Assign}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{Load}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{Store}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{BinaryOp}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{Label}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{Goto}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{IfZ}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{BeginFunc}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{EndFunc}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{Return}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{PushParam}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{RemoveParams}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{LCall}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{GlobalData}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{ReadInt}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{WriteInt}\PYG{p}{;}
+\PYG{k}{class} \PYG{n+nc}{LoadAddress}\PYG{p}{;}
+\end{Verbatim}

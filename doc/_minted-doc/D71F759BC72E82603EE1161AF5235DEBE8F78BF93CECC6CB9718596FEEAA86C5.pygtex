@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    /* Minus(\PYGZhy{}) need to be processed in parser */
+\PYGZdq{}\PYGZhy{}\PYGZdq{}     \PYGZob{} return(SUB);\PYGZcb{}
+\end{Verbatim}

@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGZdq{}int\PYGZdq{}         return(TYPE);
+\PYGZdq{};\PYGZdq{}         return(SEMI);
+\PYGZdq{},\PYGZdq{}         return(COMMA);
+\PYGZdq{}(\PYGZdq{}         return(LP);
+\PYGZdq{})\PYGZdq{}         return(RP);
+\PYGZdq{}[\PYGZdq{}         return(LB);
+\PYGZdq{}]\PYGZdq{}         return(RB);
+\PYGZdq{}\PYGZob{}\PYGZdq{}         return(LC);
+\PYGZdq{}\PYGZcb{}\PYGZdq{}         return(RC);
+\PYGZdq{}struct\PYGZdq{}      return(STRUCT);
+\PYGZdq{}return\PYGZdq{}      return(RETURN);
+\PYGZdq{}if\PYGZdq{}          return(IF);
+\PYGZdq{}else\PYGZdq{}        return(ELSE);
+\PYGZdq{}break\PYGZdq{}       return(BREAK);
+\PYGZdq{}continue\PYGZdq{}    return(CONT);
+\PYGZdq{}for\PYGZdq{}         return(FOR);
+\end{Verbatim}

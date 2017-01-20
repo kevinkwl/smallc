@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{std}\PYG{o}{::}\PYG{n}{list}\PYG{o}{\PYGZlt{}}\PYG{n}{Instruction}\PYG{o}{*\PYGZgt{}} \PYG{o}{*}\PYG{n}{code}\PYG{p}{;}
+\PYG{n}{std}\PYG{o}{::}\PYG{n}{list}\PYG{o}{\PYGZlt{}}\PYG{n}{Instruction}\PYG{o}{*\PYGZgt{}} \PYG{o}{*}\PYG{n}{data}\PYG{p}{;}
+\end{Verbatim}

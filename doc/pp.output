@@ -1,0 +1,3759 @@
+Grammar
+
+    0 $accept: PROGRAM $end
+
+    1 PROGRAM: EXTDEFS
+
+    2 EXTDEFS: EXTDEF EXTDEFS
+    3        | %empty
+
+    4 EXTDEF: TYPE EXTVARS SEMI
+    5       | STSPEC SEXTVARS SEMI
+    6       | TYPE ID LP PARAS RP STMTBLOCK
+
+    7 SEXTVARS: ID
+    8         | ID COMMA SEXTVARS
+    9         | %empty
+
+   10 EXTVARS: EXTVAR COMMA EXTVARS
+   11        | EXTVAR
+   12        | %empty
+
+   13 EXTVAR: VAR
+   14       | VAR ASSIGN INIT
+
+   15 STSPEC: STRUCT ID LC SDEFS RC
+   16       | STRUCT LC SDEFS RC
+   17       | STRUCT ID
+
+   18 PARAS: TYPE ID COMMA PARAS
+   19      | TYPE ID
+   20      | %empty
+
+   21 STMTBLOCK: LC DEFS STMTS RC
+
+   22 STMTS: STMT STMTS
+   23      | %empty
+
+   24 STMT: EXP SEMI
+   25     | STMTBLOCK
+   26     | RETURN EXP SEMI
+   27     | IF LP EXP RP STMT
+   28     | IF LP EXP RP STMT ELSE STMT
+   29     | FOR LP EXP SEMI EXP SEMI EXP RP STMT
+   30     | CONT SEMI
+   31     | BREAK SEMI
+
+   32 DEF: TYPE DECS SEMI
+   33    | STSPEC SDECS SEMI
+
+   34 DEFS: DEF DEFS
+   35     | %empty
+
+   36 SDEFS: SDEF SDEFS
+   37      | %empty
+
+   38 SDEF: TYPE SDECS SEMI
+
+   39 SDECS: ID COMMA SDECS
+   40      | ID
+
+   41 DECS: DEC COMMA DECS
+   42     | DEC
+
+   43 DEC: VAR
+   44    | VAR ASSIGN INIT
+
+   45 VAR: ID
+   46    | VAR LB INT RB
+
+   47 INIT: EXPS
+   48     | LC ARGS RC
+
+   49 EXP: EXPS
+   50    | %empty
+
+   51 EXPS: LP EXPS RP
+   52     | ID LP ARGS RP
+   53     | ID ARRS
+   54     | ID DOT ID
+   55     | INT
+   56     | EXPS ASSIGN EXPS
+   57     | EXPS ADD_ASSIGN EXPS
+   58     | EXPS SUB_ASSIGN EXPS
+   59     | EXPS MUL_ASSIGN EXPS
+   60     | EXPS DIV_ASSIGN EXPS
+   61     | EXPS AND_ASSIGN EXPS
+   62     | EXPS XOR_ASSIGN EXPS
+   63     | EXPS OR_ASSIGN EXPS
+   64     | EXPS SHL_ASSIGN EXPS
+   65     | EXPS SHR_ASSIGN EXPS
+   66     | EXPS L_OR EXPS
+   67     | EXPS L_AND EXPS
+   68     | EXPS B_OR EXPS
+   69     | EXPS B_XOR EXPS
+   70     | EXPS B_AND EXPS
+   71     | EXPS EQ EXPS
+   72     | EXPS NEQ EXPS
+   73     | EXPS GT EXPS
+   74     | EXPS GTE EXPS
+   75     | EXPS LT EXPS
+   76     | EXPS LTE EXPS
+   77     | EXPS SHL EXPS
+   78     | EXPS SHR EXPS
+   79     | EXPS ADD EXPS
+   80     | EXPS SUB EXPS
+   81     | EXPS MUL EXPS
+   82     | EXPS DIV EXPS
+   83     | EXPS MOD EXPS
+   84     | SUB EXPS
+   85     | L_NOT EXPS
+   86     | P_ADD EXPS
+   87     | P_SUB EXPS
+   88     | B_NOT EXPS
+
+   89 ARRS: LB EXP RB ARRS
+   90     | %empty
+
+   91 ARGS: EXP COMMA ARGS
+   92     | %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT (258) 46 55
+ID (259) 6 7 8 15 17 18 19 39 40 45 52 53 54
+TYPE (260) 4 6 18 19 32 38
+DOT (261) 54
+SUB (262) 80 84
+L_NOT (263) 85
+P_ADD (264) 86
+P_SUB (265) 87
+B_NOT (266) 88
+MUL (267) 81
+DIV (268) 82
+MOD (269) 83
+ADD (270) 79
+SHL (271) 77
+SHR (272) 78
+GT (273) 73
+GTE (274) 74
+LT (275) 75
+LTE (276) 76
+EQ (277) 71
+NEQ (278) 72
+B_AND (279) 70
+B_XOR (280) 69
+B_OR (281) 68
+L_AND (282) 67
+L_OR (283) 66
+ASSIGN (284) 14 44 56
+ADD_ASSIGN (285) 57
+SUB_ASSIGN (286) 58
+MUL_ASSIGN (287) 59
+DIV_ASSIGN (288) 60
+AND_ASSIGN (289) 61
+XOR_ASSIGN (290) 62
+OR_ASSIGN (291) 63
+SHL_ASSIGN (292) 64
+SHR_ASSIGN (293) 65
+SEMI (294) 4 5 24 26 29 30 31 32 33 38
+COMMA (295) 8 10 18 39 41 91
+LP (296) 6 27 28 29 51 52
+RP (297) 6 27 28 29 51 52
+LB (298) 46 89
+RB (299) 46 89
+LC (300) 15 16 21 48
+RC (301) 15 16 21 48
+STRUCT (302) 15 16 17
+RETURN (303) 26
+IF (304) 27 28
+ELSE (305) 28
+BREAK (306) 31
+CONT (307) 30
+FOR (308) 29
+UMINUS (309)
+THEN (310)
+
+
+Nonterminals, with rules where they appear
+
+$accept (56)
+    on left: 0
+PROGRAM (57)
+    on left: 1, on right: 0
+EXTDEFS (58)
+    on left: 2 3, on right: 1 2
+EXTDEF (59)
+    on left: 4 5 6, on right: 2
+SEXTVARS (60)
+    on left: 7 8 9, on right: 5 8
+EXTVARS (61)
+    on left: 10 11 12, on right: 4 10
+EXTVAR (62)
+    on left: 13 14, on right: 10 11
+STSPEC (63)
+    on left: 15 16 17, on right: 5 33
+PARAS (64)
+    on left: 18 19 20, on right: 6 18
+STMTBLOCK (65)
+    on left: 21, on right: 6 25
+STMTS (66)
+    on left: 22 23, on right: 21 22
+STMT (67)
+    on left: 24 25 26 27 28 29 30 31, on right: 22 27 28 29
+DEF (68)
+    on left: 32 33, on right: 34
+DEFS (69)
+    on left: 34 35, on right: 21 34
+SDEFS (70)
+    on left: 36 37, on right: 15 16 36
+SDEF (71)
+    on left: 38, on right: 36
+SDECS (72)
+    on left: 39 40, on right: 33 38 39
+DECS (73)
+    on left: 41 42, on right: 32 41
+DEC (74)
+    on left: 43 44, on right: 41 42
+VAR (75)
+    on left: 45 46, on right: 13 14 43 44 46
+INIT (76)
+    on left: 47 48, on right: 14 44
+EXP (77)
+    on left: 49 50, on right: 24 26 27 28 29 89 91
+EXPS (78)
+    on left: 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68
+    69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88, on right:
+    47 49 51 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73
+    74 75 76 77 78 79 80 81 82 83 84 85 86 87 88
+ARRS (79)
+    on left: 89 90, on right: 53 89
+ARGS (80)
+    on left: 91 92, on right: 48 52 91
+
+
+State 0
+
+    0 $accept: . PROGRAM $end
+
+    TYPE    shift, and go to state 1
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 3 (EXTDEFS)
+
+    PROGRAM  go to state 3
+    EXTDEFS  go to state 4
+    EXTDEF   go to state 5
+    STSPEC   go to state 6
+
+
+State 1
+
+    4 EXTDEF: TYPE . EXTVARS SEMI
+    6       | TYPE . ID LP PARAS RP STMTBLOCK
+
+    ID  shift, and go to state 7
+
+    $default  reduce using rule 12 (EXTVARS)
+
+    EXTVARS  go to state 8
+    EXTVAR   go to state 9
+    VAR      go to state 10
+
+
+State 2
+
+   15 STSPEC: STRUCT . ID LC SDEFS RC
+   16       | STRUCT . LC SDEFS RC
+   17       | STRUCT . ID
+
+    ID  shift, and go to state 11
+    LC  shift, and go to state 12
+
+
+State 3
+
+    0 $accept: PROGRAM . $end
+
+    $end  shift, and go to state 13
+
+
+State 4
+
+    1 PROGRAM: EXTDEFS .
+
+    $default  reduce using rule 1 (PROGRAM)
+
+
+State 5
+
+    2 EXTDEFS: EXTDEF . EXTDEFS
+
+    TYPE    shift, and go to state 1
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 3 (EXTDEFS)
+
+    EXTDEFS  go to state 14
+    EXTDEF   go to state 5
+    STSPEC   go to state 6
+
+
+State 6
+
+    5 EXTDEF: STSPEC . SEXTVARS SEMI
+
+    ID  shift, and go to state 15
+
+    $default  reduce using rule 9 (SEXTVARS)
+
+    SEXTVARS  go to state 16
+
+
+State 7
+
+    6 EXTDEF: TYPE ID . LP PARAS RP STMTBLOCK
+   45 VAR: ID .
+
+    LP  shift, and go to state 17
+
+    $default  reduce using rule 45 (VAR)
+
+
+State 8
+
+    4 EXTDEF: TYPE EXTVARS . SEMI
+
+    SEMI  shift, and go to state 18
+
+
+State 9
+
+   10 EXTVARS: EXTVAR . COMMA EXTVARS
+   11        | EXTVAR .
+
+    COMMA  shift, and go to state 19
+
+    $default  reduce using rule 11 (EXTVARS)
+
+
+State 10
+
+   13 EXTVAR: VAR .
+   14       | VAR . ASSIGN INIT
+   46 VAR: VAR . LB INT RB
+
+    ASSIGN  shift, and go to state 20
+    LB      shift, and go to state 21
+
+    $default  reduce using rule 13 (EXTVAR)
+
+
+State 11
+
+   15 STSPEC: STRUCT ID . LC SDEFS RC
+   17       | STRUCT ID .
+
+    LC  shift, and go to state 22
+
+    $default  reduce using rule 17 (STSPEC)
+
+
+State 12
+
+   16 STSPEC: STRUCT LC . SDEFS RC
+
+    TYPE  shift, and go to state 23
+
+    $default  reduce using rule 37 (SDEFS)
+
+    SDEFS  go to state 24
+    SDEF   go to state 25
+
+
+State 13
+
+    0 $accept: PROGRAM $end .
+
+    $default  accept
+
+
+State 14
+
+    2 EXTDEFS: EXTDEF EXTDEFS .
+
+    $default  reduce using rule 2 (EXTDEFS)
+
+
+State 15
+
+    7 SEXTVARS: ID .
+    8         | ID . COMMA SEXTVARS
+
+    COMMA  shift, and go to state 26
+
+    $default  reduce using rule 7 (SEXTVARS)
+
+
+State 16
+
+    5 EXTDEF: STSPEC SEXTVARS . SEMI
+
+    SEMI  shift, and go to state 27
+
+
+State 17
+
+    6 EXTDEF: TYPE ID LP . PARAS RP STMTBLOCK
+
+    TYPE  shift, and go to state 28
+
+    $default  reduce using rule 20 (PARAS)
+
+    PARAS  go to state 29
+
+
+State 18
+
+    4 EXTDEF: TYPE EXTVARS SEMI .
+
+    $default  reduce using rule 4 (EXTDEF)
+
+
+State 19
+
+   10 EXTVARS: EXTVAR COMMA . EXTVARS
+
+    ID  shift, and go to state 30
+
+    $default  reduce using rule 12 (EXTVARS)
+
+    EXTVARS  go to state 31
+    EXTVAR   go to state 9
+    VAR      go to state 10
+
+
+State 20
+
+   14 EXTVAR: VAR ASSIGN . INIT
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+    LC     shift, and go to state 40
+
+    INIT  go to state 41
+    EXPS  go to state 42
+
+
+State 21
+
+   46 VAR: VAR LB . INT RB
+
+    INT  shift, and go to state 43
+
+
+State 22
+
+   15 STSPEC: STRUCT ID LC . SDEFS RC
+
+    TYPE  shift, and go to state 23
+
+    $default  reduce using rule 37 (SDEFS)
+
+    SDEFS  go to state 44
+    SDEF   go to state 25
+
+
+State 23
+
+   38 SDEF: TYPE . SDECS SEMI
+
+    ID  shift, and go to state 45
+
+    SDECS  go to state 46
+
+
+State 24
+
+   16 STSPEC: STRUCT LC SDEFS . RC
+
+    RC  shift, and go to state 47
+
+
+State 25
+
+   36 SDEFS: SDEF . SDEFS
+
+    TYPE  shift, and go to state 23
+
+    $default  reduce using rule 37 (SDEFS)
+
+    SDEFS  go to state 48
+    SDEF   go to state 25
+
+
+State 26
+
+    8 SEXTVARS: ID COMMA . SEXTVARS
+
+    ID  shift, and go to state 15
+
+    $default  reduce using rule 9 (SEXTVARS)
+
+    SEXTVARS  go to state 49
+
+
+State 27
+
+    5 EXTDEF: STSPEC SEXTVARS SEMI .
+
+    $default  reduce using rule 5 (EXTDEF)
+
+
+State 28
+
+   18 PARAS: TYPE . ID COMMA PARAS
+   19      | TYPE . ID
+
+    ID  shift, and go to state 50
+
+
+State 29
+
+    6 EXTDEF: TYPE ID LP PARAS . RP STMTBLOCK
+
+    RP  shift, and go to state 51
+
+
+State 30
+
+   45 VAR: ID .
+
+    $default  reduce using rule 45 (VAR)
+
+
+State 31
+
+   10 EXTVARS: EXTVAR COMMA EXTVARS .
+
+    $default  reduce using rule 10 (EXTVARS)
+
+
+State 32
+
+   55 EXPS: INT .
+
+    $default  reduce using rule 55 (EXPS)
+
+
+State 33
+
+   52 EXPS: ID . LP ARGS RP
+   53     | ID . ARRS
+   54     | ID . DOT ID
+
+    DOT  shift, and go to state 52
+    LP   shift, and go to state 53
+    LB   shift, and go to state 54
+
+    $default  reduce using rule 90 (ARRS)
+
+    ARRS  go to state 55
+
+
+State 34
+
+   84 EXPS: SUB . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 56
+
+
+State 35
+
+   85 EXPS: L_NOT . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 57
+
+
+State 36
+
+   86 EXPS: P_ADD . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 58
+
+
+State 37
+
+   87 EXPS: P_SUB . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 59
+
+
+State 38
+
+   88 EXPS: B_NOT . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 60
+
+
+State 39
+
+   51 EXPS: LP . EXPS RP
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 61
+
+
+State 40
+
+   48 INIT: LC . ARGS RC
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    RC        reduce using rule 92 (ARGS)
+    $default  reduce using rule 50 (EXP)
+
+    EXP   go to state 62
+    EXPS  go to state 63
+    ARGS  go to state 64
+
+
+State 41
+
+   14 EXTVAR: VAR ASSIGN INIT .
+
+    $default  reduce using rule 14 (EXTVAR)
+
+
+State 42
+
+   47 INIT: EXPS .
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 47 (INIT)
+
+
+State 43
+
+   46 VAR: VAR LB INT . RB
+
+    RB  shift, and go to state 93
+
+
+State 44
+
+   15 STSPEC: STRUCT ID LC SDEFS . RC
+
+    RC  shift, and go to state 94
+
+
+State 45
+
+   39 SDECS: ID . COMMA SDECS
+   40      | ID .
+
+    COMMA  shift, and go to state 95
+
+    $default  reduce using rule 40 (SDECS)
+
+
+State 46
+
+   38 SDEF: TYPE SDECS . SEMI
+
+    SEMI  shift, and go to state 96
+
+
+State 47
+
+   16 STSPEC: STRUCT LC SDEFS RC .
+
+    $default  reduce using rule 16 (STSPEC)
+
+
+State 48
+
+   36 SDEFS: SDEF SDEFS .
+
+    $default  reduce using rule 36 (SDEFS)
+
+
+State 49
+
+    8 SEXTVARS: ID COMMA SEXTVARS .
+
+    $default  reduce using rule 8 (SEXTVARS)
+
+
+State 50
+
+   18 PARAS: TYPE ID . COMMA PARAS
+   19      | TYPE ID .
+
+    COMMA  shift, and go to state 97
+
+    $default  reduce using rule 19 (PARAS)
+
+
+State 51
+
+    6 EXTDEF: TYPE ID LP PARAS RP . STMTBLOCK
+
+    LC  shift, and go to state 98
+
+    STMTBLOCK  go to state 99
+
+
+State 52
+
+   54 EXPS: ID DOT . ID
+
+    ID  shift, and go to state 100
+
+
+State 53
+
+   52 EXPS: ID LP . ARGS RP
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    RP        reduce using rule 92 (ARGS)
+    $default  reduce using rule 50 (EXP)
+
+    EXP   go to state 62
+    EXPS  go to state 63
+    ARGS  go to state 101
+
+
+State 54
+
+   89 ARRS: LB . EXP RB ARRS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    $default  reduce using rule 50 (EXP)
+
+    EXP   go to state 102
+    EXPS  go to state 63
+
+
+State 55
+
+   53 EXPS: ID ARRS .
+
+    $default  reduce using rule 53 (EXPS)
+
+
+State 56
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+   84     | SUB EXPS .
+
+    $default  reduce using rule 84 (EXPS)
+
+
+State 57
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+   85     | L_NOT EXPS .
+
+    $default  reduce using rule 85 (EXPS)
+
+
+State 58
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+   86     | P_ADD EXPS .
+
+    $default  reduce using rule 86 (EXPS)
+
+
+State 59
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+   87     | P_SUB EXPS .
+
+    $default  reduce using rule 87 (EXPS)
+
+
+State 60
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+   88     | B_NOT EXPS .
+
+    $default  reduce using rule 88 (EXPS)
+
+
+State 61
+
+   51 EXPS: LP EXPS . RP
+   56     | EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+    RP          shift, and go to state 103
+
+
+State 62
+
+   91 ARGS: EXP . COMMA ARGS
+
+    COMMA  shift, and go to state 104
+
+
+State 63
+
+   49 EXP: EXPS .
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 49 (EXP)
+
+
+State 64
+
+   48 INIT: LC ARGS . RC
+
+    RC  shift, and go to state 105
+
+
+State 65
+
+   80 EXPS: EXPS SUB . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 106
+
+
+State 66
+
+   81 EXPS: EXPS MUL . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 107
+
+
+State 67
+
+   82 EXPS: EXPS DIV . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 108
+
+
+State 68
+
+   83 EXPS: EXPS MOD . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 109
+
+
+State 69
+
+   79 EXPS: EXPS ADD . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 110
+
+
+State 70
+
+   77 EXPS: EXPS SHL . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 111
+
+
+State 71
+
+   78 EXPS: EXPS SHR . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 112
+
+
+State 72
+
+   73 EXPS: EXPS GT . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 113
+
+
+State 73
+
+   74 EXPS: EXPS GTE . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 114
+
+
+State 74
+
+   75 EXPS: EXPS LT . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 115
+
+
+State 75
+
+   76 EXPS: EXPS LTE . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 116
+
+
+State 76
+
+   71 EXPS: EXPS EQ . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 117
+
+
+State 77
+
+   72 EXPS: EXPS NEQ . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 118
+
+
+State 78
+
+   70 EXPS: EXPS B_AND . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 119
+
+
+State 79
+
+   69 EXPS: EXPS B_XOR . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 120
+
+
+State 80
+
+   68 EXPS: EXPS B_OR . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 121
+
+
+State 81
+
+   67 EXPS: EXPS L_AND . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 122
+
+
+State 82
+
+   66 EXPS: EXPS L_OR . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 123
+
+
+State 83
+
+   56 EXPS: EXPS ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 124
+
+
+State 84
+
+   57 EXPS: EXPS ADD_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 125
+
+
+State 85
+
+   58 EXPS: EXPS SUB_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 126
+
+
+State 86
+
+   59 EXPS: EXPS MUL_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 127
+
+
+State 87
+
+   60 EXPS: EXPS DIV_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 128
+
+
+State 88
+
+   61 EXPS: EXPS AND_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 129
+
+
+State 89
+
+   62 EXPS: EXPS XOR_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 130
+
+
+State 90
+
+   63 EXPS: EXPS OR_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 131
+
+
+State 91
+
+   64 EXPS: EXPS SHL_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 132
+
+
+State 92
+
+   65 EXPS: EXPS SHR_ASSIGN . EXPS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    EXPS  go to state 133
+
+
+State 93
+
+   46 VAR: VAR LB INT RB .
+
+    $default  reduce using rule 46 (VAR)
+
+
+State 94
+
+   15 STSPEC: STRUCT ID LC SDEFS RC .
+
+    $default  reduce using rule 15 (STSPEC)
+
+
+State 95
+
+   39 SDECS: ID COMMA . SDECS
+
+    ID  shift, and go to state 45
+
+    SDECS  go to state 134
+
+
+State 96
+
+   38 SDEF: TYPE SDECS SEMI .
+
+    $default  reduce using rule 38 (SDEF)
+
+
+State 97
+
+   18 PARAS: TYPE ID COMMA . PARAS
+
+    TYPE  shift, and go to state 28
+
+    $default  reduce using rule 20 (PARAS)
+
+    PARAS  go to state 135
+
+
+State 98
+
+   21 STMTBLOCK: LC . DEFS STMTS RC
+
+    TYPE    shift, and go to state 136
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 35 (DEFS)
+
+    STSPEC  go to state 137
+    DEF     go to state 138
+    DEFS    go to state 139
+
+
+State 99
+
+    6 EXTDEF: TYPE ID LP PARAS RP STMTBLOCK .
+
+    $default  reduce using rule 6 (EXTDEF)
+
+
+State 100
+
+   54 EXPS: ID DOT ID .
+
+    $default  reduce using rule 54 (EXPS)
+
+
+State 101
+
+   52 EXPS: ID LP ARGS . RP
+
+    RP  shift, and go to state 140
+
+
+State 102
+
+   89 ARRS: LB EXP . RB ARRS
+
+    RB  shift, and go to state 141
+
+
+State 103
+
+   51 EXPS: LP EXPS RP .
+
+    $default  reduce using rule 51 (EXPS)
+
+
+State 104
+
+   91 ARGS: EXP COMMA . ARGS
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    COMMA     reduce using rule 50 (EXP)
+    $default  reduce using rule 92 (ARGS)
+
+    EXP   go to state 62
+    EXPS  go to state 63
+    ARGS  go to state 142
+
+
+State 105
+
+   48 INIT: LC ARGS RC .
+
+    $default  reduce using rule 48 (INIT)
+
+
+State 106
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   80     | EXPS SUB EXPS .
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+
+    $default  reduce using rule 80 (EXPS)
+
+
+State 107
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   81     | EXPS MUL EXPS .
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    $default  reduce using rule 81 (EXPS)
+
+
+State 108
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   82     | EXPS DIV EXPS .
+   83     | EXPS . MOD EXPS
+
+    $default  reduce using rule 82 (EXPS)
+
+
+State 109
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+   83     | EXPS MOD EXPS .
+
+    $default  reduce using rule 83 (EXPS)
+
+
+State 110
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   79     | EXPS ADD EXPS .
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+
+    $default  reduce using rule 79 (EXPS)
+
+
+State 111
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   77     | EXPS SHL EXPS .
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+
+    $default  reduce using rule 77 (EXPS)
+
+
+State 112
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   78     | EXPS SHR EXPS .
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+
+    $default  reduce using rule 78 (EXPS)
+
+
+State 113
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   73     | EXPS GT EXPS .
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+    SHL  shift, and go to state 70
+    SHR  shift, and go to state 71
+
+    $default  reduce using rule 73 (EXPS)
+
+
+State 114
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   74     | EXPS GTE EXPS .
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+    SHL  shift, and go to state 70
+    SHR  shift, and go to state 71
+
+    $default  reduce using rule 74 (EXPS)
+
+
+State 115
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   75     | EXPS LT EXPS .
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+    SHL  shift, and go to state 70
+    SHR  shift, and go to state 71
+
+    $default  reduce using rule 75 (EXPS)
+
+
+State 116
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   76     | EXPS LTE EXPS .
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+    SHL  shift, and go to state 70
+    SHR  shift, and go to state 71
+
+    $default  reduce using rule 76 (EXPS)
+
+
+State 117
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   71     | EXPS EQ EXPS .
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+    SHL  shift, and go to state 70
+    SHR  shift, and go to state 71
+    GT   shift, and go to state 72
+    GTE  shift, and go to state 73
+    LT   shift, and go to state 74
+    LTE  shift, and go to state 75
+
+    $default  reduce using rule 71 (EXPS)
+
+
+State 118
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   72     | EXPS NEQ EXPS .
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+    SHL  shift, and go to state 70
+    SHR  shift, and go to state 71
+    GT   shift, and go to state 72
+    GTE  shift, and go to state 73
+    LT   shift, and go to state 74
+    LTE  shift, and go to state 75
+
+    $default  reduce using rule 72 (EXPS)
+
+
+State 119
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   70     | EXPS B_AND EXPS .
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB  shift, and go to state 65
+    MUL  shift, and go to state 66
+    DIV  shift, and go to state 67
+    MOD  shift, and go to state 68
+    ADD  shift, and go to state 69
+    SHL  shift, and go to state 70
+    SHR  shift, and go to state 71
+    GT   shift, and go to state 72
+    GTE  shift, and go to state 73
+    LT   shift, and go to state 74
+    LTE  shift, and go to state 75
+    EQ   shift, and go to state 76
+    NEQ  shift, and go to state 77
+
+    $default  reduce using rule 70 (EXPS)
+
+
+State 120
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   69     | EXPS B_XOR EXPS .
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB    shift, and go to state 65
+    MUL    shift, and go to state 66
+    DIV    shift, and go to state 67
+    MOD    shift, and go to state 68
+    ADD    shift, and go to state 69
+    SHL    shift, and go to state 70
+    SHR    shift, and go to state 71
+    GT     shift, and go to state 72
+    GTE    shift, and go to state 73
+    LT     shift, and go to state 74
+    LTE    shift, and go to state 75
+    EQ     shift, and go to state 76
+    NEQ    shift, and go to state 77
+    B_AND  shift, and go to state 78
+
+    $default  reduce using rule 69 (EXPS)
+
+
+State 121
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   68     | EXPS B_OR EXPS .
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB    shift, and go to state 65
+    MUL    shift, and go to state 66
+    DIV    shift, and go to state 67
+    MOD    shift, and go to state 68
+    ADD    shift, and go to state 69
+    SHL    shift, and go to state 70
+    SHR    shift, and go to state 71
+    GT     shift, and go to state 72
+    GTE    shift, and go to state 73
+    LT     shift, and go to state 74
+    LTE    shift, and go to state 75
+    EQ     shift, and go to state 76
+    NEQ    shift, and go to state 77
+    B_AND  shift, and go to state 78
+    B_XOR  shift, and go to state 79
+
+    $default  reduce using rule 68 (EXPS)
+
+
+State 122
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   67     | EXPS L_AND EXPS .
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB    shift, and go to state 65
+    MUL    shift, and go to state 66
+    DIV    shift, and go to state 67
+    MOD    shift, and go to state 68
+    ADD    shift, and go to state 69
+    SHL    shift, and go to state 70
+    SHR    shift, and go to state 71
+    GT     shift, and go to state 72
+    GTE    shift, and go to state 73
+    LT     shift, and go to state 74
+    LTE    shift, and go to state 75
+    EQ     shift, and go to state 76
+    NEQ    shift, and go to state 77
+    B_AND  shift, and go to state 78
+    B_XOR  shift, and go to state 79
+    B_OR   shift, and go to state 80
+
+    $default  reduce using rule 67 (EXPS)
+
+
+State 123
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   66     | EXPS L_OR EXPS .
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB    shift, and go to state 65
+    MUL    shift, and go to state 66
+    DIV    shift, and go to state 67
+    MOD    shift, and go to state 68
+    ADD    shift, and go to state 69
+    SHL    shift, and go to state 70
+    SHR    shift, and go to state 71
+    GT     shift, and go to state 72
+    GTE    shift, and go to state 73
+    LT     shift, and go to state 74
+    LTE    shift, and go to state 75
+    EQ     shift, and go to state 76
+    NEQ    shift, and go to state 77
+    B_AND  shift, and go to state 78
+    B_XOR  shift, and go to state 79
+    B_OR   shift, and go to state 80
+    L_AND  shift, and go to state 81
+
+    $default  reduce using rule 66 (EXPS)
+
+
+State 124
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   56     | EXPS ASSIGN EXPS .
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 56 (EXPS)
+
+
+State 125
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   57     | EXPS ADD_ASSIGN EXPS .
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 57 (EXPS)
+
+
+State 126
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   58     | EXPS SUB_ASSIGN EXPS .
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 58 (EXPS)
+
+
+State 127
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   59     | EXPS MUL_ASSIGN EXPS .
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 59 (EXPS)
+
+
+State 128
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   60     | EXPS DIV_ASSIGN EXPS .
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 60 (EXPS)
+
+
+State 129
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   61     | EXPS AND_ASSIGN EXPS .
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 61 (EXPS)
+
+
+State 130
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   62     | EXPS XOR_ASSIGN EXPS .
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 62 (EXPS)
+
+
+State 131
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   63     | EXPS OR_ASSIGN EXPS .
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 63 (EXPS)
+
+
+State 132
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   64     | EXPS SHL_ASSIGN EXPS .
+   65     | EXPS . SHR_ASSIGN EXPS
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 64 (EXPS)
+
+
+State 133
+
+   56 EXPS: EXPS . ASSIGN EXPS
+   57     | EXPS . ADD_ASSIGN EXPS
+   58     | EXPS . SUB_ASSIGN EXPS
+   59     | EXPS . MUL_ASSIGN EXPS
+   60     | EXPS . DIV_ASSIGN EXPS
+   61     | EXPS . AND_ASSIGN EXPS
+   62     | EXPS . XOR_ASSIGN EXPS
+   63     | EXPS . OR_ASSIGN EXPS
+   64     | EXPS . SHL_ASSIGN EXPS
+   65     | EXPS . SHR_ASSIGN EXPS
+   65     | EXPS SHR_ASSIGN EXPS .
+   66     | EXPS . L_OR EXPS
+   67     | EXPS . L_AND EXPS
+   68     | EXPS . B_OR EXPS
+   69     | EXPS . B_XOR EXPS
+   70     | EXPS . B_AND EXPS
+   71     | EXPS . EQ EXPS
+   72     | EXPS . NEQ EXPS
+   73     | EXPS . GT EXPS
+   74     | EXPS . GTE EXPS
+   75     | EXPS . LT EXPS
+   76     | EXPS . LTE EXPS
+   77     | EXPS . SHL EXPS
+   78     | EXPS . SHR EXPS
+   79     | EXPS . ADD EXPS
+   80     | EXPS . SUB EXPS
+   81     | EXPS . MUL EXPS
+   82     | EXPS . DIV EXPS
+   83     | EXPS . MOD EXPS
+
+    SUB         shift, and go to state 65
+    MUL         shift, and go to state 66
+    DIV         shift, and go to state 67
+    MOD         shift, and go to state 68
+    ADD         shift, and go to state 69
+    SHL         shift, and go to state 70
+    SHR         shift, and go to state 71
+    GT          shift, and go to state 72
+    GTE         shift, and go to state 73
+    LT          shift, and go to state 74
+    LTE         shift, and go to state 75
+    EQ          shift, and go to state 76
+    NEQ         shift, and go to state 77
+    B_AND       shift, and go to state 78
+    B_XOR       shift, and go to state 79
+    B_OR        shift, and go to state 80
+    L_AND       shift, and go to state 81
+    L_OR        shift, and go to state 82
+    ASSIGN      shift, and go to state 83
+    ADD_ASSIGN  shift, and go to state 84
+    SUB_ASSIGN  shift, and go to state 85
+    MUL_ASSIGN  shift, and go to state 86
+    DIV_ASSIGN  shift, and go to state 87
+    AND_ASSIGN  shift, and go to state 88
+    XOR_ASSIGN  shift, and go to state 89
+    OR_ASSIGN   shift, and go to state 90
+    SHL_ASSIGN  shift, and go to state 91
+    SHR_ASSIGN  shift, and go to state 92
+
+    $default  reduce using rule 65 (EXPS)
+
+
+State 134
+
+   39 SDECS: ID COMMA SDECS .
+
+    $default  reduce using rule 39 (SDECS)
+
+
+State 135
+
+   18 PARAS: TYPE ID COMMA PARAS .
+
+    $default  reduce using rule 18 (PARAS)
+
+
+State 136
+
+   32 DEF: TYPE . DECS SEMI
+
+    ID  shift, and go to state 30
+
+    DECS  go to state 143
+    DEC   go to state 144
+    VAR   go to state 145
+
+
+State 137
+
+   33 DEF: STSPEC . SDECS SEMI
+
+    ID  shift, and go to state 45
+
+    SDECS  go to state 146
+
+
+State 138
+
+   34 DEFS: DEF . DEFS
+
+    TYPE    shift, and go to state 136
+    STRUCT  shift, and go to state 2
+
+    $default  reduce using rule 35 (DEFS)
+
+    STSPEC  go to state 137
+    DEF     go to state 138
+    DEFS    go to state 147
+
+
+State 139
+
+   21 STMTBLOCK: LC DEFS . STMTS RC
+
+    INT     shift, and go to state 32
+    ID      shift, and go to state 33
+    SUB     shift, and go to state 34
+    L_NOT   shift, and go to state 35
+    P_ADD   shift, and go to state 36
+    P_SUB   shift, and go to state 37
+    B_NOT   shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 98
+    RETURN  shift, and go to state 148
+    IF      shift, and go to state 149
+    BREAK   shift, and go to state 150
+    CONT    shift, and go to state 151
+    FOR     shift, and go to state 152
+
+    SEMI      reduce using rule 50 (EXP)
+    $default  reduce using rule 23 (STMTS)
+
+    STMTBLOCK  go to state 153
+    STMTS      go to state 154
+    STMT       go to state 155
+    EXP        go to state 156
+    EXPS       go to state 63
+
+
+State 140
+
+   52 EXPS: ID LP ARGS RP .
+
+    $default  reduce using rule 52 (EXPS)
+
+
+State 141
+
+   89 ARRS: LB EXP RB . ARRS
+
+    LB  shift, and go to state 54
+
+    $default  reduce using rule 90 (ARRS)
+
+    ARRS  go to state 157
+
+
+State 142
+
+   91 ARGS: EXP COMMA ARGS .
+
+    $default  reduce using rule 91 (ARGS)
+
+
+State 143
+
+   32 DEF: TYPE DECS . SEMI
+
+    SEMI  shift, and go to state 158
+
+
+State 144
+
+   41 DECS: DEC . COMMA DECS
+   42     | DEC .
+
+    COMMA  shift, and go to state 159
+
+    $default  reduce using rule 42 (DECS)
+
+
+State 145
+
+   43 DEC: VAR .
+   44    | VAR . ASSIGN INIT
+   46 VAR: VAR . LB INT RB
+
+    ASSIGN  shift, and go to state 160
+    LB      shift, and go to state 21
+
+    $default  reduce using rule 43 (DEC)
+
+
+State 146
+
+   33 DEF: STSPEC SDECS . SEMI
+
+    SEMI  shift, and go to state 161
+
+
+State 147
+
+   34 DEFS: DEF DEFS .
+
+    $default  reduce using rule 34 (DEFS)
+
+
+State 148
+
+   26 STMT: RETURN . EXP SEMI
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    $default  reduce using rule 50 (EXP)
+
+    EXP   go to state 162
+    EXPS  go to state 63
+
+
+State 149
+
+   27 STMT: IF . LP EXP RP STMT
+   28     | IF . LP EXP RP STMT ELSE STMT
+
+    LP  shift, and go to state 163
+
+
+State 150
+
+   31 STMT: BREAK . SEMI
+
+    SEMI  shift, and go to state 164
+
+
+State 151
+
+   30 STMT: CONT . SEMI
+
+    SEMI  shift, and go to state 165
+
+
+State 152
+
+   29 STMT: FOR . LP EXP SEMI EXP SEMI EXP RP STMT
+
+    LP  shift, and go to state 166
+
+
+State 153
+
+   25 STMT: STMTBLOCK .
+
+    $default  reduce using rule 25 (STMT)
+
+
+State 154
+
+   21 STMTBLOCK: LC DEFS STMTS . RC
+
+    RC  shift, and go to state 167
+
+
+State 155
+
+   22 STMTS: STMT . STMTS
+
+    INT     shift, and go to state 32
+    ID      shift, and go to state 33
+    SUB     shift, and go to state 34
+    L_NOT   shift, and go to state 35
+    P_ADD   shift, and go to state 36
+    P_SUB   shift, and go to state 37
+    B_NOT   shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 98
+    RETURN  shift, and go to state 148
+    IF      shift, and go to state 149
+    BREAK   shift, and go to state 150
+    CONT    shift, and go to state 151
+    FOR     shift, and go to state 152
+
+    SEMI      reduce using rule 50 (EXP)
+    $default  reduce using rule 23 (STMTS)
+
+    STMTBLOCK  go to state 153
+    STMTS      go to state 168
+    STMT       go to state 155
+    EXP        go to state 156
+    EXPS       go to state 63
+
+
+State 156
+
+   24 STMT: EXP . SEMI
+
+    SEMI  shift, and go to state 169
+
+
+State 157
+
+   89 ARRS: LB EXP RB ARRS .
+
+    $default  reduce using rule 89 (ARRS)
+
+
+State 158
+
+   32 DEF: TYPE DECS SEMI .
+
+    $default  reduce using rule 32 (DEF)
+
+
+State 159
+
+   41 DECS: DEC COMMA . DECS
+
+    ID  shift, and go to state 30
+
+    DECS  go to state 170
+    DEC   go to state 144
+    VAR   go to state 145
+
+
+State 160
+
+   44 DEC: VAR ASSIGN . INIT
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+    LC     shift, and go to state 40
+
+    INIT  go to state 171
+    EXPS  go to state 42
+
+
+State 161
+
+   33 DEF: STSPEC SDECS SEMI .
+
+    $default  reduce using rule 33 (DEF)
+
+
+State 162
+
+   26 STMT: RETURN EXP . SEMI
+
+    SEMI  shift, and go to state 172
+
+
+State 163
+
+   27 STMT: IF LP . EXP RP STMT
+   28     | IF LP . EXP RP STMT ELSE STMT
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    $default  reduce using rule 50 (EXP)
+
+    EXP   go to state 173
+    EXPS  go to state 63
+
+
+State 164
+
+   31 STMT: BREAK SEMI .
+
+    $default  reduce using rule 31 (STMT)
+
+
+State 165
+
+   30 STMT: CONT SEMI .
+
+    $default  reduce using rule 30 (STMT)
+
+
+State 166
+
+   29 STMT: FOR LP . EXP SEMI EXP SEMI EXP RP STMT
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    $default  reduce using rule 50 (EXP)
+
+    EXP   go to state 174
+    EXPS  go to state 63
+
+
+State 167
+
+   21 STMTBLOCK: LC DEFS STMTS RC .
+
+    $default  reduce using rule 21 (STMTBLOCK)
+
+
+State 168
+
+   22 STMTS: STMT STMTS .
+
+    $default  reduce using rule 22 (STMTS)
+
+
+State 169
+
+   24 STMT: EXP SEMI .
+
+    $default  reduce using rule 24 (STMT)
+
+
+State 170
+
+   41 DECS: DEC COMMA DECS .
+
+    $default  reduce using rule 41 (DECS)
+
+
+State 171
+
+   44 DEC: VAR ASSIGN INIT .
+
+    $default  reduce using rule 44 (DEC)
+
+
+State 172
+
+   26 STMT: RETURN EXP SEMI .
+
+    $default  reduce using rule 26 (STMT)
+
+
+State 173
+
+   27 STMT: IF LP EXP . RP STMT
+   28     | IF LP EXP . RP STMT ELSE STMT
+
+    RP  shift, and go to state 175
+
+
+State 174
+
+   29 STMT: FOR LP EXP . SEMI EXP SEMI EXP RP STMT
+
+    SEMI  shift, and go to state 176
+
+
+State 175
+
+   27 STMT: IF LP EXP RP . STMT
+   28     | IF LP EXP RP . STMT ELSE STMT
+
+    INT     shift, and go to state 32
+    ID      shift, and go to state 33
+    SUB     shift, and go to state 34
+    L_NOT   shift, and go to state 35
+    P_ADD   shift, and go to state 36
+    P_SUB   shift, and go to state 37
+    B_NOT   shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 98
+    RETURN  shift, and go to state 148
+    IF      shift, and go to state 149
+    BREAK   shift, and go to state 150
+    CONT    shift, and go to state 151
+    FOR     shift, and go to state 152
+
+    $default  reduce using rule 50 (EXP)
+
+    STMTBLOCK  go to state 153
+    STMT       go to state 177
+    EXP        go to state 156
+    EXPS       go to state 63
+
+
+State 176
+
+   29 STMT: FOR LP EXP SEMI . EXP SEMI EXP RP STMT
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    $default  reduce using rule 50 (EXP)
+
+    EXP   go to state 178
+    EXPS  go to state 63
+
+
+State 177
+
+   27 STMT: IF LP EXP RP STMT .
+   28     | IF LP EXP RP STMT . ELSE STMT
+
+    ELSE  shift, and go to state 179
+
+    $default  reduce using rule 27 (STMT)
+
+
+State 178
+
+   29 STMT: FOR LP EXP SEMI EXP . SEMI EXP RP STMT
+
+    SEMI  shift, and go to state 180
+
+
+State 179
+
+   28 STMT: IF LP EXP RP STMT ELSE . STMT
+
+    INT     shift, and go to state 32
+    ID      shift, and go to state 33
+    SUB     shift, and go to state 34
+    L_NOT   shift, and go to state 35
+    P_ADD   shift, and go to state 36
+    P_SUB   shift, and go to state 37
+    B_NOT   shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 98
+    RETURN  shift, and go to state 148
+    IF      shift, and go to state 149
+    BREAK   shift, and go to state 150
+    CONT    shift, and go to state 151
+    FOR     shift, and go to state 152
+
+    $default  reduce using rule 50 (EXP)
+
+    STMTBLOCK  go to state 153
+    STMT       go to state 181
+    EXP        go to state 156
+    EXPS       go to state 63
+
+
+State 180
+
+   29 STMT: FOR LP EXP SEMI EXP SEMI . EXP RP STMT
+
+    INT    shift, and go to state 32
+    ID     shift, and go to state 33
+    SUB    shift, and go to state 34
+    L_NOT  shift, and go to state 35
+    P_ADD  shift, and go to state 36
+    P_SUB  shift, and go to state 37
+    B_NOT  shift, and go to state 38
+    LP     shift, and go to state 39
+
+    $default  reduce using rule 50 (EXP)
+
+    EXP   go to state 182
+    EXPS  go to state 63
+
+
+State 181
+
+   28 STMT: IF LP EXP RP STMT ELSE STMT .
+
+    $default  reduce using rule 28 (STMT)
+
+
+State 182
+
+   29 STMT: FOR LP EXP SEMI EXP SEMI EXP . RP STMT
+
+    RP  shift, and go to state 183
+
+
+State 183
+
+   29 STMT: FOR LP EXP SEMI EXP SEMI EXP RP . STMT
+
+    INT     shift, and go to state 32
+    ID      shift, and go to state 33
+    SUB     shift, and go to state 34
+    L_NOT   shift, and go to state 35
+    P_ADD   shift, and go to state 36
+    P_SUB   shift, and go to state 37
+    B_NOT   shift, and go to state 38
+    LP      shift, and go to state 39
+    LC      shift, and go to state 98
+    RETURN  shift, and go to state 148
+    IF      shift, and go to state 149
+    BREAK   shift, and go to state 150
+    CONT    shift, and go to state 151
+    FOR     shift, and go to state 152
+
+    $default  reduce using rule 50 (EXP)
+
+    STMTBLOCK  go to state 153
+    STMT       go to state 184
+    EXP        go to state 156
+    EXPS       go to state 63
+
+
+State 184
+
+   29 STMT: FOR LP EXP SEMI EXP SEMI EXP RP STMT .
+
+    $default  reduce using rule 29 (STMT)

@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{if} \PYG{p}{(}\PYG{o}{!}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{init}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{isConstant}\PYG{p}{())}
+    \PYG{n}{InitilizerNotCompileTimeConstantError}\PYG{p}{(}\PYG{k}{this}\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{n}{init}\PYG{p}{);}
+\end{Verbatim}
